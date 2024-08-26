@@ -1,0 +1,140 @@
+plugins {
+    id ("java-library")
+    //id "io.github.krakowski.jextract" version "0.5.0"
+    id ("maven-publish")
+    id ("signing")
+}
+
+configurations {
+    baseline
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
+
+/*
+  external/jextract/build/jextract/bin/jextract
+    external/libremidi/include/libremidi/libremidi-c.h
+    -I ../libremidi/include
+    -t dev.atsushieno.panama.libremidi
+    --output libremidi-panama/src/main/java
+
+   built jextract on OSX with:
+     ./gradlew build
+        -Pllvm_home=/Library/Developer/CommandLineTools/usr
+        -Pjdk22_home=/Users/atsushi/.sdkman/candidates/java/current
+*/
+/*
+jextract {
+    header("${project.projectDir}/../external/libremidi/include/libremidi/libremidi-c.h") {
+        // The library name
+        libraries = [ 'libremidi' ]
+    
+        // The package under which all source files will be generated
+        targetPackage = 'dev.atsushieno.panama.libremidi'
+        
+        // The generated class name
+        className = 'LibreMidi'
+    }
+}
+*/
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+                'Implementation-Title': 'libremidi Panama binding',
+                'Implementation-Vendor': 'atsushieno',
+                'Implementation-Version': project.version,
+                'Specification-Title': 'libremidi Panama binding',
+                'Specification-Vendor': 'atsushieno',
+                'Specification-Version': project.version
+    }
+}
+
+javadoc {
+    failOnError = false
+    //from javadoc.destinationDir
+}
+
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier.set("javadoc")
+    from javadoc.destinationDir
+}
+
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+afterEvaluate {
+    generateMetadataFileForMavenJavaPublication.dependsOn javadocJar, sourcesJar
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+def pomClosure = {
+    name.set('libremidi-javacpp')
+    delegate.description.set('libremidi Panama binding with prebuilt binaries')
+    url.set('https://github.com/atsushieno/libremidi-panama')
+    scm {
+        url.set('https://github.com/atsushieno/libremidi-panama')
+    }
+    licenses {
+        license {
+            name.set('the MIT License')
+            url.set('https://github.com/atsushieno/libremidi-panama/blob/main/LICENSE')
+        }
+    }
+    developers {
+        developer {
+            id.set('atsushieno')
+            name.set('Atsushi Eno')
+            email.set('atsushieno@gmail.com')
+        }
+    }
+}
+
+// publisher settings
+publishing {
+    publications {
+        if (!rootDir.list().contains("libremidi-panama"))
+            return
+
+        mavenJava(MavenPublication) {
+            from components.java
+            artifacts = [jar, javadocJar, sourcesJar]
+            pom pomClosure
+        }
+    }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/${ossrhStagingRepositoryId}")
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+}
+
+// keep it as is. It is replaced by CI release builds
+signing {}

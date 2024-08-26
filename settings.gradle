@@ -1,0 +1,9 @@
+pluginManagement {
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '2.0.10'
+    }
+}
+rootProject.name = "libremidi-panama"
+
+include("libremidi-panama")
+include("examples")

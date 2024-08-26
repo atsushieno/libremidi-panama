@@ -1,0 +1,41 @@
+apply plugin: "maven-publish"
+
+/*
+tasks.register('javadocJar', Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+*/
+tasks.register('sourceJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifacts = [jar, javacppJar, javadocJar, sourcesJar] + javacppBuild.existingArtifacts(configurations.javacppPlatform)
+            pom pomClosure
+        }
+        mavenJavacppPlatform(MavenPublication) {
+            groupId project.group
+            artifactId project.name + "-platform"
+            artifacts = [javacppPlatformJar, javacppPlatformJavadocJar, javacppPlatformSourcesJar]
+            pom pomClosure
+            pom.withXml javacppBuild.xmlAction(configurations.javacppPlatform)
+        }
+    }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+}
+

@@ -1,0 +1,6 @@
+[submodule "external/jextract"]
+	path = external/jextract
+	url = https://github.com/openjdk/jextract.git
+[submodule "external/libremidi"]
+	path = external/libremidi
+	url = https://github.com/jcelerier/libremidi.git

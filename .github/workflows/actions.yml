@@ -134,14 +134,12 @@ jobs:
       # build or publish, depending on whether it is for release tags or not
       - name: build (ONLY FOR NON-RELEASES)
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: |
-          cd $GITHUB_WORKSPACE ;
-          ./gradlew --warning-mode all build
+        working-directory: $GITHUB_WORKSPACE
+        run: ./gradlew --warning-mode all build
       - name: publish (ONLY FOR NEW RELEASE TAGS)
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          cd $GITHUB_WORKSPACE ;
-          ./gradlew --warning-mode all build publish
+        working-directory: $GITHUB_WORKSPACE
+        run: ./gradlew --warning-mode all build publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

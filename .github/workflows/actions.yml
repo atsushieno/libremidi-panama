@@ -1,0 +1,143 @@
+name: 'build'
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  create_staging_repository:
+    runs-on: ubuntu-24.04
+    name: Create staging repository
+    outputs:
+      repository_id: ${{ steps.create.outputs.repository_id }}
+    steps:
+      - id: create
+        name: create OSSRH Repository for aggregated pushes (ONLY FOR RELEASES)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: nexus-actions/create-nexus-staging-repo@main
+        with:
+          username: atsushieno
+          password: ${{ secrets.OSSRH_PASSWORD }}
+          staging_profile_id: 1b92322eb8632e
+          description: ${{ github.repository }}/${{ github.workflow }}#${{ github.run_number }}
+          base_url: https://s01.oss.sonatype.org/service/local/
+
+  build_native:
+    name: 'build native library on ${{ matrix.os }}'
+    needs: create_staging_repository
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-13, macos-14, windows-latest]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: apt update (on Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          echo y | sudo apt-get install doxygen cmake ninja-build libasound2-dev libjack-jackd2-dev
+      - name: setup Windows developer tools for C++
+        if: startsWith(matrix.os, 'windows')
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: build libremidi
+        shell: bash
+        run: |
+          cd external/libremidi
+          cmake -B cmake-build-relwithdebinfo -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=On
+          cmake --build cmake-build-relwithdebinfo
+          cd ../..
+      - name: build libremidi on Darwin-x64
+        if: startsWith(matrix.os, 'macos-13')
+        shell: bash
+        run: |
+          mkdir -p libremidi-panama/src/main/resources/jne/macos/x64/
+          cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.dylib libremidi-panama/src/main/resources/jne/macos/x64/
+      - name: build libremidi on Darwin-arm64
+        if: startsWith(matrix.os, 'macos-14')
+        shell: bash
+        run: |
+          mkdir -p libremidi-panama/src/main/resources/jne/macos/arm64/
+          cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.dylib libremidi-panama/src/main/resources/jne/macos/arm64/
+      - name: build libremidi on Linux x64
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          mkdir -p libremidi-panama/src/main/resources/jne/linux/x64/
+          cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.so libremidi-panama/src/main/resources/jne/linux/x64/
+      - name: build libremidi on Linux arm64
+        if: matrix.os == 'ubuntu-24.04-arm'
+        shell: bash
+        run: |
+          mkdir -p libremidi-panama/src/main/resources/jne/linux/x64/
+          cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.so libremidi-panama/src/main/resources/jne/linux/arm64/
+      - name: build libremidi on Windows x64
+        if: startsWith(matrix.os, 'windows')
+        shell: bash
+        run: |
+          mkdir -p libremidi-panama/src/main/resources/jne/windows/x64/
+          cp external/libremidi/cmake-build-relwithdebinfo/libremidi.dll libremidi-panama/src/main/resources/jne/windows/x64/
+  build-publish-jar:
+    name: 'build and publish jar'
+    needs: build_native
+    runs-on: ubuntu-24.04
+    steps:
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      # Only for release tags
+      - name: setup gpg necessities
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          mkdir -p '${{ github.workspace }}'
+          echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > '${{ github.workspace }}/${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}'
+      - name: setup gpg necessities on Windows
+        if: false #startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'windows')
+        run: |
+          [System.Convert]::FromBase64String("${{ secrets.GPG_KEY_CONTENTS }}") | Out-File '${{ env.WORKSPACE }}/${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}'
+        env:
+          WORKSPACE: ${{ github.workspace }}
+          GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
+          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
+      - name: rewrite build.gradle to require signing on awkward OS
+        if: startsWith(github.ref, 'refs/tags/') && contains(matrix.os, 'macos')
+        run: sed -i "" "s/signing {}/signing { sign(publishing.publications) }/" libremidi-panama/build.gradle
+      - name: rewrite build.gradle to require signing on standard OS
+        shell: bash
+        if: startsWith(github.ref, 'refs/tags/') && !contains(matrix.os, 'macos')
+        run: sed -i "s/signing {}/signing { sign(publishing.publications) }/" libremidi-panama/build.gradle
+      # build or publish, depending on whether it is for release tags or not
+      - name: build (ONLY FOR NON-RELEASES)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: ./gradlew --warning-mode all build
+      - name: publish (ONLY FOR NEW RELEASE TAGS)
+        if: startsWith(github.ref, 'refs/tags/')
+        run:
+          ./gradlew --warning-mode all build publish
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          OSSRH_STAGING_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository_id }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_SECRET_KEY_RING_FILE: ${{ format('{0}/{1}', github.workspace, secrets.SIGNING_SECRET_KEY_RING_FILE) }}
+      - name: upload artifact - Jar
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: libremidi-panama-jars-${{matrix.os}}
+          path: libremidi-panama/build/libs/*.jar
+      # Update API reference,
+      - name: deploy to GitHub Pages
+        if: success() && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-24.04'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: libremidi-panama/build/docs/javadoc

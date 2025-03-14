@@ -57,7 +57,7 @@ jobs:
         run: |
           cd external/libremidi
           cmake -B cmake-build-relwithdebinfo -DBUILD_SHARED_LIBS=On
-          cmake --build cmake-build-relwithdebinfo -config=Release
+          cmake --build cmake-build-relwithdebinfo --config=Release
       - name: copy libremidi on Darwin-x64
         if: startsWith(matrix.os, 'macos-13')
         shell: bash

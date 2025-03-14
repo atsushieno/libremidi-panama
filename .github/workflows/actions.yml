@@ -6,26 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  create_staging_repository:
-    runs-on: ubuntu-24.04
-    name: Create staging repository
-    outputs:
-      repository_id: ${{ steps.create.outputs.repository_id }}
-    steps:
-      - id: create
-        name: create OSSRH Repository for aggregated pushes (ONLY FOR RELEASES)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: nexus-actions/create-nexus-staging-repo@main
-        with:
-          username: atsushieno
-          password: ${{ secrets.OSSRH_PASSWORD }}
-          staging_profile_id: 1b92322eb8632e
-          description: ${{ github.repository }}/${{ github.workflow }}#${{ github.run_number }}
-          base_url: https://s01.oss.sonatype.org/service/local/
-
   build_native:
     name: 'build native library on ${{ matrix.os }}'
-    needs: create_staging_repository
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -129,22 +111,21 @@ jobs:
           echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > '${{ github.workspace }}/${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}'
       - name: rewrite build.gradle to require signing
         shell: bash
-        if: startsWith(github.ref, 'refs/tags/') && !contains(matrix.os, 'macos')
+        if: startsWith(github.ref, 'refs/tags/')
         run: sed -i "s/signing {}/signing { sign(publishing.publications) }/" libremidi-panama/build.gradle
 
       # build or publish, depending on whether it is for release tags or not
       - name: build (ONLY FOR NON-RELEASES)
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
-          cd ${{ github.workspace }} && ls -l && ./gradlew --warning-mode all build
+          cd ${{ github.workspace }} && ./gradlew --warning-mode all build
       - name: publish (ONLY FOR NEW RELEASE TAGS)
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          cd ${{ github.workspace }} && ls -l && ./gradlew --warning-mode all build publish
+          cd ${{ github.workspace }} && ./gradlew --warning-mode all build publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          OSSRH_STAGING_REPOSITORY_ID: ${{ needs.create_staging_repository.outputs.repository_id }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ format('{0}/{1}', github.workspace, secrets.SIGNING_SECRET_KEY_RING_FILE) }}

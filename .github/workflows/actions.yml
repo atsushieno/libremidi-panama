@@ -127,18 +127,7 @@ jobs:
         run: |
           mkdir -p '${{ github.workspace }}'
           echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > '${{ github.workspace }}/${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}'
-      - name: setup gpg necessities on Windows
-        if: false #startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'windows')
-        run: |
-          [System.Convert]::FromBase64String("${{ secrets.GPG_KEY_CONTENTS }}") | Out-File '${{ env.WORKSPACE }}/${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}'
-        env:
-          WORKSPACE: ${{ github.workspace }}
-          GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
-          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
-      - name: rewrite build.gradle to require signing on awkward OS
-        if: startsWith(github.ref, 'refs/tags/') && contains(matrix.os, 'macos')
-        run: sed -i "" "s/signing {}/signing { sign(publishing.publications) }/" libremidi-panama/build.gradle
-      - name: rewrite build.gradle to require signing on standard OS
+      - name: rewrite build.gradle to require signing
         shell: bash
         if: startsWith(github.ref, 'refs/tags/') && !contains(matrix.os, 'macos')
         run: sed -i "s/signing {}/signing { sign(publishing.publications) }/" libremidi-panama/build.gradle
@@ -146,12 +135,12 @@ jobs:
       - name: build (ONLY FOR NON-RELEASES)
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
-          cd
+          cd ${{ GITHUB_WORKSPACE }}
           ./gradlew --warning-mode all build
       - name: publish (ONLY FOR NEW RELEASE TAGS)
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          cd
+          cd ${{ GITHUB_WORKSPACE }}
           ./gradlew --warning-mode all build publish
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}

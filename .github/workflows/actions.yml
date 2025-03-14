@@ -65,7 +65,7 @@ jobs:
           name: libremidi-bin-${{matrix.os}}
           path: external/libremidi/cmake-build-relwithdebinfo/liblibremidi.dylib
       - name: upload libremidi on ${{matrix.os}}
-        if: startsWith(matrix.os, 'linux')
+        if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v4
         with:
           name: libremidi-bin-${{matrix.os}}

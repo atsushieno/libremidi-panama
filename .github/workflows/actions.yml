@@ -44,43 +44,50 @@ jobs:
       - name: setup Windows developer tools for C++
         if: startsWith(matrix.os, 'windows')
         uses: ilammy/msvc-dev-cmd@v1
-      - name: build libremidi
+      - name: build libremidi on non-Windows platforms
         shell: bash
+        if: !startsWith(matrix.os, 'windows')
         run: |
           cd external/libremidi
           cmake -B cmake-build-relwithdebinfo -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=On
           cmake --build cmake-build-relwithdebinfo
-          cd ../..
-      - name: build libremidi on Darwin-x64
+      - name: build libremidi on Windows
+        shell: bash
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          cd external/libremidi
+          cmake -B cmake-build-relwithdebinfo -DBUILD_SHARED_LIBS=On
+          cmake --build cmake-build-relwithdebinfo -config=Release
+      - name: copy libremidi on Darwin-x64
         if: startsWith(matrix.os, 'macos-13')
         shell: bash
         run: |
           mkdir -p libremidi-panama/src/main/resources/jne/macos/x64/
           cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.dylib libremidi-panama/src/main/resources/jne/macos/x64/
-      - name: build libremidi on Darwin-arm64
+      - name: copy libremidi on Darwin-arm64
         if: startsWith(matrix.os, 'macos-14')
         shell: bash
         run: |
           mkdir -p libremidi-panama/src/main/resources/jne/macos/arm64/
           cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.dylib libremidi-panama/src/main/resources/jne/macos/arm64/
-      - name: build libremidi on Linux x64
+      - name: copy libremidi on Linux x64
         if: matrix.os == 'ubuntu-24.04'
         shell: bash
         run: |
           mkdir -p libremidi-panama/src/main/resources/jne/linux/x64/
           cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.so libremidi-panama/src/main/resources/jne/linux/x64/
-      - name: build libremidi on Linux arm64
+      - name: copy libremidi on Linux arm64
         if: matrix.os == 'ubuntu-24.04-arm'
         shell: bash
         run: |
-          mkdir -p libremidi-panama/src/main/resources/jne/linux/x64/
+          mkdir -p libremidi-panama/src/main/resources/jne/linux/arm64/
           cp external/libremidi/cmake-build-relwithdebinfo/liblibremidi.so libremidi-panama/src/main/resources/jne/linux/arm64/
-      - name: build libremidi on Windows x64
+      - name: copy libremidi on Windows x64
         if: startsWith(matrix.os, 'windows')
         shell: bash
         run: |
           mkdir -p libremidi-panama/src/main/resources/jne/windows/x64/
-          cp external/libremidi/cmake-build-relwithdebinfo/libremidi.dll libremidi-panama/src/main/resources/jne/windows/x64/
+          cp external/libremidi/cmake-build-relwithdebinfo/Release/libremidi.dll libremidi-panama/src/main/resources/jne/windows/x64/
   build-publish-jar:
     name: 'build and publish jar'
     needs: build_native

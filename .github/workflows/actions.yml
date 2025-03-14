@@ -86,27 +86,27 @@ jobs:
       - name: download libremidi on Darwin-x64
         uses: actions/download-artifact@v4
         with:
-          name: libremidi-bin-macos-x64
+          name: libremidi-bin-macos-13
           path: libremidi-panama/src/main/resources/jne/macos/x64/
       - name: download libremidi on Darwin-arm64
         uses: actions/download-artifact@v4
         with:
-          name: libremidi-bin-macos-arm64
+          name: libremidi-bin-macos-14
           path: libremidi-panama/src/main/resources/jne/macos/arm64/
       - name: download libremidi on Linux-x64
         uses: actions/download-artifact@v4
         with:
-          name: libremidi-bin-linux-x64
+          name: libremidi-bin-ubuntu-24.04
           path: libremidi-panama/src/main/resources/jne/linux/x64/
       - name: download libremidi on Linux-arm64
         uses: actions/download-artifact@v4
         with:
-          name: libremidi-bin-linux-arm64
+          name: libremidi-bin-ubuntu-24.04-arm
           path: libremidi-panama/src/main/resources/jne/linux/arm64/
       - name: download libremidi on Windows-x64
         uses: actions/download-artifact@v4
         with:
-          name: libremidi-bin-windows-x64
+          name: libremidi-bin-windows-latest
           path: libremidi-panama/src/main/resources/jne/windows/x64/
 
       - name: set up JDK 17

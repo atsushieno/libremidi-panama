@@ -15,7 +15,9 @@ application {
 
 dependencies {
     implementation(project(":libremidi-panama"))
+    implementation 'com.fizzed:jne:4.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.scijava:native-lib-loader:2.5.0"
 }
 repositories {
     mavenCentral()

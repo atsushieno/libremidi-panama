@@ -1,9 +1,13 @@
+import com.fizzed.jne.JNE
 import dev.atsushieno.panama.libremidi.libremidi_api_configuration
 import dev.atsushieno.panama.libremidi.libremidi_c_h
 import dev.atsushieno.panama.libremidi.libremidi_observer_configuration
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
+import java.lang.foreign.SegmentAllocator
 import java.lang.foreign.ValueLayout
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 import dev.atsushieno.panama.libremidi.libremidi_c_h as library
 import dev.atsushieno.panama.libremidi.`libremidi_midi_observer_enumerate_input_ports$x0` as InputEnumerationCallback
 import dev.atsushieno.panama.libremidi.`libremidi_midi_observer_enumerate_output_ports$x0` as OutputEnumerationCallback
@@ -54,6 +58,8 @@ private fun guessPlatform(): DesktopPlatform {
 
 
 fun main(args: Array<String>) {
+    System.getProperties().setProperty("jextract.trace.downcalls", "true")
+    JNE.loadLibrary("libremidi")
 
     val api = API.getPlatformDefault(guessPlatform(), 1)
 
@@ -67,23 +73,26 @@ fun main(args: Array<String>) {
     library.libremidi_midi_api_configuration_init(apiConf)
     libremidi_api_configuration.api(apiConf, api)
 
-    val observer = arena.allocate(ValueLayout.ADDRESS)
-    library.libremidi_midi_observer_new(obsConf, apiConf, observer)
+    val observerPtr = arena.allocate(ValueLayout.ADDRESS_UNALIGNED)
+    println("libremidi_midi_observer_new: " + library.libremidi_midi_observer_new(obsConf, apiConf, observerPtr))
+    val observer = observerPtr.get(ValueLayout.ADDRESS_UNALIGNED, 0)
 
-    val commonProc = { port: MemorySegment, func: (MemorySegment, MemorySegment, MemorySegment)->Int ->
-        val nameBuf = arena.allocate(1024)
-        val sizePtr = arena.allocateFrom(ValueLayout.ADDRESS, MemorySegment.NULL)
-        println(func(port, nameBuf, sizePtr))
-        val size = sizePtr[ValueLayout.JAVA_LONG, 0]
-        println(size)
-        println(nameBuf.asByteBuffer().array().decodeToString())
+    val commonProc = { port: MemorySegment, getName: (observer: MemorySegment, context: MemorySegment, size: MemorySegment)->Int ->
+        val namePtr = arena.allocate(ValueLayout.ADDRESS_UNALIGNED)
+        val sizePtr = arena.allocate(ValueLayout.JAVA_LONG)
+        getName(port, namePtr, sizePtr)
+        val size = sizePtr.get(ValueLayout.JAVA_LONG, 0)
+        val nameSrc = namePtr.get(ValueLayout.ADDRESS_UNALIGNED, 0)
+        val nameBuf = arena.allocate(size)
+        MemorySegment.copy(nameSrc.reinterpret(size), 0, nameBuf, 0, size)
+        println(StandardCharsets.UTF_8.decode(nameBuf.asByteBuffer()))
     }
 
-    val inGetName = { port: MemorySegment, ms1: MemorySegment, ms2: MemorySegment -> libremidi_c_h.libremidi_midi_in_port_name(port, ms1, ms2) }
-    val inProc = InputEnumerationCallback.allocate({ _, port -> commonProc(port, inGetName) }, arena)
-    library.libremidi_midi_observer_enumerate_input_ports(observer, null, inProc)
+    val inPortGetName = { port: MemorySegment, nameBuf: MemorySegment, size: MemorySegment -> libremidi_c_h.libremidi_midi_in_port_name(port, nameBuf, size) }
+    val inProc = InputEnumerationCallback.allocate({ _, port -> commonProc(port, inPortGetName) }, arena)
+    library.libremidi_midi_observer_enumerate_input_ports(observer, MemorySegment.NULL, inProc)
 
-    val outGetName = { port: MemorySegment, ms1: MemorySegment, ms2: MemorySegment -> libremidi_c_h.libremidi_midi_out_port_name(port, ms1, ms2) }
-    val outProc = OutputEnumerationCallback.allocate({ _, port -> commonProc(port, outGetName) }, arena)
-    library.libremidi_midi_observer_enumerate_output_ports(observer, null, outProc)
+    val outPortGetName = { port: MemorySegment, nameBuf: MemorySegment, size: MemorySegment -> libremidi_c_h.libremidi_midi_out_port_name(port, nameBuf, size) }
+    val outProc = OutputEnumerationCallback.allocate({ _, port -> commonProc(port, outPortGetName) }, arena)
+    library.libremidi_midi_observer_enumerate_output_ports(observer, MemorySegment.NULL, outProc)
 }

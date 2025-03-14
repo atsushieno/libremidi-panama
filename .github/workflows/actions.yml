@@ -46,7 +46,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: build libremidi on non-Windows platforms
         shell: bash
-        if: !startsWith(matrix.os, 'windows')
+        if: ${{ !startsWith(matrix.os, 'windows') }}
         run: |
           cd external/libremidi
           cmake -B cmake-build-relwithdebinfo -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=On

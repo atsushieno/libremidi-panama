@@ -56,7 +56,7 @@ public class libremidi_api_configuration {
         return api$LAYOUT;
     }
 
-    private static final long api$OFFSET = 0;
+    private static final long api$OFFSET = $LAYOUT.byteOffset(groupElement("api"));
 
     /**
      * Offset for field:
@@ -104,7 +104,7 @@ public class libremidi_api_configuration {
         return configuration_type$LAYOUT;
     }
 
-    private static final long configuration_type$OFFSET = 4;
+    private static final long configuration_type$OFFSET = $LAYOUT.byteOffset(groupElement("configuration_type"));
 
     /**
      * Offset for field:
@@ -160,7 +160,7 @@ public class libremidi_api_configuration {
         return data$LAYOUT;
     }
 
-    private static final long data$OFFSET = 8;
+    private static final long data$OFFSET = $LAYOUT.byteOffset(groupElement("data"));
 
     /**
      * Offset for field:

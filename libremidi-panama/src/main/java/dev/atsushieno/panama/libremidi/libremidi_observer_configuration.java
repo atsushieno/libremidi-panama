@@ -53,12 +53,12 @@ public class libremidi_observer_configuration {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        libremidi_observer_configuration.struct_unnamed_6.layout().withName("on_error"),
-        libremidi_observer_configuration.struct_unnamed_7.layout().withName("on_warning"),
-        libremidi_observer_configuration.struct_unnamed_8.layout().withName("input_added"),
-        libremidi_observer_configuration.struct_unnamed_9.layout().withName("input_removed"),
-        libremidi_observer_configuration.struct_unnamed_10.layout().withName("output_added"),
-        libremidi_observer_configuration.struct_unnamed_11.layout().withName("output_removed"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_63_3.layout().withName("on_error"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_68_3.layout().withName("on_warning"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_74_3.layout().withName("input_added"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_79_3.layout().withName("input_removed"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_84_3.layout().withName("output_added"),
+        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_89_3.layout().withName("output_removed"),
         libremidi_c_h.C_BOOL.withName("track_hardware"),
         libremidi_c_h.C_BOOL.withName("track_virtual"),
         libremidi_c_h.C_BOOL.withName("track_any"),
@@ -81,16 +81,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_6 {
+    public static class struct_unnamed_at_libremidi_c_h_63_3 {
 
-        struct_unnamed_6() {
+        struct_unnamed_at_libremidi_c_h_63_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:84:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_63_3");
 
         /**
          * The layout of this struct
@@ -111,7 +111,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -211,7 +211,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -303,7 +303,7 @@ public class libremidi_observer_configuration {
         return on_error$LAYOUT;
     }
 
-    private static final long on_error$OFFSET = 0;
+    private static final long on_error$OFFSET = $LAYOUT.byteOffset(groupElement("on_error"));
 
     /**
      * Offset for field:
@@ -352,16 +352,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_7 {
+    public static class struct_unnamed_at_libremidi_c_h_68_3 {
 
-        struct_unnamed_7() {
+        struct_unnamed_at_libremidi_c_h_68_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:89:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_68_3");
 
         /**
          * The layout of this struct
@@ -382,7 +382,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -482,7 +482,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -574,7 +574,7 @@ public class libremidi_observer_configuration {
         return on_warning$LAYOUT;
     }
 
-    private static final long on_warning$OFFSET = 16;
+    private static final long on_warning$OFFSET = $LAYOUT.byteOffset(groupElement("on_warning"));
 
     /**
      * Offset for field:
@@ -623,16 +623,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_8 {
+    public static class struct_unnamed_at_libremidi_c_h_74_3 {
 
-        struct_unnamed_8() {
+        struct_unnamed_at_libremidi_c_h_74_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:95:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_74_3");
 
         /**
          * The layout of this struct
@@ -653,7 +653,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -751,7 +751,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -843,7 +843,7 @@ public class libremidi_observer_configuration {
         return input_added$LAYOUT;
     }
 
-    private static final long input_added$OFFSET = 32;
+    private static final long input_added$OFFSET = $LAYOUT.byteOffset(groupElement("input_added"));
 
     /**
      * Offset for field:
@@ -892,16 +892,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_9 {
+    public static class struct_unnamed_at_libremidi_c_h_79_3 {
 
-        struct_unnamed_9() {
+        struct_unnamed_at_libremidi_c_h_79_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:100:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_79_3");
 
         /**
          * The layout of this struct
@@ -922,7 +922,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -1020,7 +1020,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -1112,7 +1112,7 @@ public class libremidi_observer_configuration {
         return input_removed$LAYOUT;
     }
 
-    private static final long input_removed$OFFSET = 48;
+    private static final long input_removed$OFFSET = $LAYOUT.byteOffset(groupElement("input_removed"));
 
     /**
      * Offset for field:
@@ -1161,16 +1161,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_10 {
+    public static class struct_unnamed_at_libremidi_c_h_84_3 {
 
-        struct_unnamed_10() {
+        struct_unnamed_at_libremidi_c_h_84_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:105:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_84_3");
 
         /**
          * The layout of this struct
@@ -1191,7 +1191,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -1289,7 +1289,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -1381,7 +1381,7 @@ public class libremidi_observer_configuration {
         return output_added$LAYOUT;
     }
 
-    private static final long output_added$OFFSET = 64;
+    private static final long output_added$OFFSET = $LAYOUT.byteOffset(groupElement("output_added"));
 
     /**
      * Offset for field:
@@ -1430,16 +1430,16 @@ public class libremidi_observer_configuration {
      * }
      * }
      */
-    public static class struct_unnamed_11 {
+    public static class struct_unnamed_at_libremidi_c_h_89_3 {
 
-        struct_unnamed_11() {
+        struct_unnamed_at_libremidi_c_h_89_3() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:110:3)");
+        ).withName("struct_unnamed_at_libremidi_c_h_89_3");
 
         /**
          * The layout of this struct
@@ -1460,7 +1460,7 @@ public class libremidi_observer_configuration {
             return context$LAYOUT;
         }
 
-        private static final long context$OFFSET = 0;
+        private static final long context$OFFSET = $LAYOUT.byteOffset(groupElement("context"));
 
         /**
          * Offset for field:
@@ -1558,7 +1558,7 @@ public class libremidi_observer_configuration {
             return callback$LAYOUT;
         }
 
-        private static final long callback$OFFSET = 8;
+        private static final long callback$OFFSET = $LAYOUT.byteOffset(groupElement("callback"));
 
         /**
          * Offset for field:
@@ -1650,7 +1650,7 @@ public class libremidi_observer_configuration {
         return output_removed$LAYOUT;
     }
 
-    private static final long output_removed$OFFSET = 80;
+    private static final long output_removed$OFFSET = $LAYOUT.byteOffset(groupElement("output_removed"));
 
     /**
      * Offset for field:
@@ -1703,7 +1703,7 @@ public class libremidi_observer_configuration {
         return track_hardware$LAYOUT;
     }
 
-    private static final long track_hardware$OFFSET = 96;
+    private static final long track_hardware$OFFSET = $LAYOUT.byteOffset(groupElement("track_hardware"));
 
     /**
      * Offset for field:
@@ -1747,7 +1747,7 @@ public class libremidi_observer_configuration {
         return track_virtual$LAYOUT;
     }
 
-    private static final long track_virtual$OFFSET = 97;
+    private static final long track_virtual$OFFSET = $LAYOUT.byteOffset(groupElement("track_virtual"));
 
     /**
      * Offset for field:
@@ -1791,7 +1791,7 @@ public class libremidi_observer_configuration {
         return track_any$LAYOUT;
     }
 
-    private static final long track_any$OFFSET = 98;
+    private static final long track_any$OFFSET = $LAYOUT.byteOffset(groupElement("track_any"));
 
     /**
      * Offset for field:
@@ -1835,7 +1835,7 @@ public class libremidi_observer_configuration {
         return notify_in_constructor$LAYOUT;
     }
 
-    private static final long notify_in_constructor$OFFSET = 99;
+    private static final long notify_in_constructor$OFFSET = $LAYOUT.byteOffset(groupElement("notify_in_constructor"));
 
     /**
      * Offset for field:

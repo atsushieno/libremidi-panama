@@ -29,8 +29,9 @@ public class libremidi_c_h {
     }
 
     static MemorySegment findOrThrow(String symbol) {
-        return SYMBOL_LOOKUP.find(symbol)
-            .orElseThrow(() -> new UnsatisfiedLinkError("unresolved symbol: " + symbol));
+        var ret = SYMBOL_LOOKUP.find(symbol);
+        if (ret.isPresent()) return ret.get();
+        throw new RuntimeException("Symbol not found: " + symbol);
     }
 
     static MethodHandle upcallHandle(Class<?> fi, String name, FunctionDescriptor fdesc) {
@@ -58,16 +59,16 @@ public class libremidi_c_h {
     static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.loaderLookup()
             .or(Linker.nativeLinker().defaultLookup());
 
-    public static final ValueLayout.OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
-    public static final ValueLayout.OfByte C_CHAR = ValueLayout.JAVA_BYTE;
-    public static final ValueLayout.OfShort C_SHORT = ValueLayout.JAVA_SHORT;
-    public static final ValueLayout.OfInt C_INT = ValueLayout.JAVA_INT;
-    public static final ValueLayout.OfLong C_LONG_LONG = ValueLayout.JAVA_LONG;
-    public static final ValueLayout.OfFloat C_FLOAT = ValueLayout.JAVA_FLOAT;
-    public static final ValueLayout.OfDouble C_DOUBLE = ValueLayout.JAVA_DOUBLE;
-    public static final AddressLayout C_POINTER = ValueLayout.ADDRESS
-            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, JAVA_BYTE));
-    public static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
+    public static final ValueLayout.OfBoolean C_BOOL = (ValueLayout.OfBoolean) Linker.nativeLinker().canonicalLayouts().get("bool");
+    public static final ValueLayout.OfByte C_CHAR =(ValueLayout.OfByte)Linker.nativeLinker().canonicalLayouts().get("char");
+    public static final ValueLayout.OfShort C_SHORT = (ValueLayout.OfShort) Linker.nativeLinker().canonicalLayouts().get("short");
+    public static final ValueLayout.OfInt C_INT = (ValueLayout.OfInt) Linker.nativeLinker().canonicalLayouts().get("int");
+    public static final ValueLayout.OfLong C_LONG_LONG = (ValueLayout.OfLong) Linker.nativeLinker().canonicalLayouts().get("long long");
+    public static final ValueLayout.OfFloat C_FLOAT = (ValueLayout.OfFloat) Linker.nativeLinker().canonicalLayouts().get("float");
+    public static final ValueLayout.OfDouble C_DOUBLE = (ValueLayout.OfDouble) Linker.nativeLinker().canonicalLayouts().get("double");
+    public static final AddressLayout C_POINTER = ((AddressLayout) Linker.nativeLinker().canonicalLayouts().get("void*"))
+            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, C_CHAR));
+    public static final ValueLayout.OfLong C_LONG = (ValueLayout.OfLong) Linker.nativeLinker().canonicalLayouts().get("long");
     private static final int __bool_true_false_are_defined = (int)1L;
     /**
      * {@snippet lang=c :
@@ -248,6 +249,15 @@ public class libremidi_c_h {
     public static int __has_ptrcheck() {
         return __has_ptrcheck;
     }
+    private static final int USE_CLANG_TYPES = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * #define USE_CLANG_TYPES 0
+     * }
+     */
+    public static int USE_CLANG_TYPES() {
+        return USE_CLANG_TYPES;
+    }
     private static final int __PTHREAD_SIZE__ = (int)8176L;
     /**
      * {@snippet lang=c :
@@ -373,6 +383,168 @@ public class libremidi_c_h {
      */
     public static int UINT16_MAX() {
         return UINT16_MAX;
+    }
+    private static final int UNSPECIFIED = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.UNSPECIFIED = 0
+     * }
+     */
+    public static int UNSPECIFIED() {
+        return UNSPECIFIED;
+    }
+    private static final int COREMIDI = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.COREMIDI = 1
+     * }
+     */
+    public static int COREMIDI() {
+        return COREMIDI;
+    }
+    private static final int ALSA_SEQ = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.ALSA_SEQ = 2
+     * }
+     */
+    public static int ALSA_SEQ() {
+        return ALSA_SEQ;
+    }
+    private static final int ALSA_RAW = (int)3L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.ALSA_RAW = 3
+     * }
+     */
+    public static int ALSA_RAW() {
+        return ALSA_RAW;
+    }
+    private static final int JACK_MIDI = (int)4L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.JACK_MIDI = 4
+     * }
+     */
+    public static int JACK_MIDI() {
+        return JACK_MIDI;
+    }
+    private static final int WINDOWS_MM = (int)5L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.WINDOWS_MM = 5
+     * }
+     */
+    public static int WINDOWS_MM() {
+        return WINDOWS_MM;
+    }
+    private static final int WINDOWS_UWP = (int)6L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.WINDOWS_UWP = 6
+     * }
+     */
+    public static int WINDOWS_UWP() {
+        return WINDOWS_UWP;
+    }
+    private static final int WEBMIDI = (int)7L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.WEBMIDI = 7
+     * }
+     */
+    public static int WEBMIDI() {
+        return WEBMIDI;
+    }
+    private static final int PIPEWIRE = (int)8L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.PIPEWIRE = 8
+     * }
+     */
+    public static int PIPEWIRE() {
+        return PIPEWIRE;
+    }
+    private static final int KEYBOARD = (int)9L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.KEYBOARD = 9
+     * }
+     */
+    public static int KEYBOARD() {
+        return KEYBOARD;
+    }
+    private static final int NETWORK = (int)10L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.NETWORK = 10
+     * }
+     */
+    public static int NETWORK() {
+        return NETWORK;
+    }
+    private static final int ALSA_RAW_UMP = (int)4096L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.ALSA_RAW_UMP = 4096
+     * }
+     */
+    public static int ALSA_RAW_UMP() {
+        return ALSA_RAW_UMP;
+    }
+    private static final int ALSA_SEQ_UMP = (int)4097L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.ALSA_SEQ_UMP = 4097
+     * }
+     */
+    public static int ALSA_SEQ_UMP() {
+        return ALSA_SEQ_UMP;
+    }
+    private static final int COREMIDI_UMP = (int)4098L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.COREMIDI_UMP = 4098
+     * }
+     */
+    public static int COREMIDI_UMP() {
+        return COREMIDI_UMP;
+    }
+    private static final int WINDOWS_MIDI_SERVICES = (int)4099L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.WINDOWS_MIDI_SERVICES = 4099
+     * }
+     */
+    public static int WINDOWS_MIDI_SERVICES() {
+        return WINDOWS_MIDI_SERVICES;
+    }
+    private static final int KEYBOARD_UMP = (int)4100L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.KEYBOARD_UMP = 4100
+     * }
+     */
+    public static int KEYBOARD_UMP() {
+        return KEYBOARD_UMP;
+    }
+    private static final int NETWORK_UMP = (int)4101L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.NETWORK_UMP = 4101
+     * }
+     */
+    public static int NETWORK_UMP() {
+        return NETWORK_UMP;
+    }
+    private static final int DUMMY = (int)65535L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.DUMMY = 65535
+     * }
+     */
+    public static int DUMMY() {
+        return DUMMY;
     }
     /**
      * {@snippet lang=c :
@@ -788,94 +960,16 @@ public class libremidi_c_h {
     public static final AddressLayout __darwin_pthread_t = libremidi_c_h.C_POINTER;
     /**
      * {@snippet lang=c :
-     * typedef unsigned char u_int8_t
+     * typedef __darwin_intptr_t intptr_t
      * }
      */
-    public static final OfByte u_int8_t = libremidi_c_h.C_CHAR;
-    /**
-     * {@snippet lang=c :
-     * typedef unsigned short u_int16_t
-     * }
-     */
-    public static final OfShort u_int16_t = libremidi_c_h.C_SHORT;
-    /**
-     * {@snippet lang=c :
-     * typedef unsigned int u_int32_t
-     * }
-     */
-    public static final OfInt u_int32_t = libremidi_c_h.C_INT;
-    /**
-     * {@snippet lang=c :
-     * typedef unsigned long long u_int64_t
-     * }
-     */
-    public static final OfLong u_int64_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int64_t register_t
-     * }
-     */
-    public static final OfLong register_t = libremidi_c_h.C_LONG_LONG;
+    public static final OfLong intptr_t = libremidi_c_h.C_LONG;
     /**
      * {@snippet lang=c :
      * typedef unsigned long uintptr_t
      * }
      */
     public static final OfLong uintptr_t = libremidi_c_h.C_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef u_int64_t user_addr_t
-     * }
-     */
-    public static final OfLong user_addr_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef u_int64_t user_size_t
-     * }
-     */
-    public static final OfLong user_size_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int64_t user_ssize_t
-     * }
-     */
-    public static final OfLong user_ssize_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int64_t user_long_t
-     * }
-     */
-    public static final OfLong user_long_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef u_int64_t user_ulong_t
-     * }
-     */
-    public static final OfLong user_ulong_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int64_t user_time_t
-     * }
-     */
-    public static final OfLong user_time_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int64_t user_off_t
-     * }
-     */
-    public static final OfLong user_off_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef u_int64_t syscall_arg_t
-     * }
-     */
-    public static final OfLong syscall_arg_t = libremidi_c_h.C_LONG_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef __darwin_intptr_t intptr_t
-     * }
-     */
-    public static final OfLong intptr_t = libremidi_c_h.C_LONG;
     /**
      * {@snippet lang=c :
      * typedef long intmax_t
@@ -890,28 +984,28 @@ public class libremidi_c_h {
     public static final OfLong uintmax_t = libremidi_c_h.C_LONG;
     /**
      * {@snippet lang=c :
-     * typedef unsigned char midi1_symbol
+     * typedef unsigned char libremidi_midi1_symbol
      * }
      */
-    public static final OfByte midi1_symbol = libremidi_c_h.C_CHAR;
+    public static final OfByte libremidi_midi1_symbol = libremidi_c_h.C_CHAR;
     /**
      * {@snippet lang=c :
-     * typedef unsigned char *midi1_message
+     * typedef libremidi_midi1_symbol *libremidi_midi1_message
      * }
      */
-    public static final AddressLayout midi1_message = libremidi_c_h.C_POINTER;
+    public static final AddressLayout libremidi_midi1_message = libremidi_c_h.C_POINTER;
     /**
      * {@snippet lang=c :
-     * typedef uint32_t midi2_symbol
+     * typedef uint32_t libremidi_midi2_symbol
      * }
      */
-    public static final OfInt midi2_symbol = libremidi_c_h.C_INT;
+    public static final OfInt libremidi_midi2_symbol = libremidi_c_h.C_INT;
     /**
      * {@snippet lang=c :
-     * typedef midi2_symbol *midi2_message
+     * typedef libremidi_midi2_symbol *libremidi_midi2_message
      * }
      */
-    public static final AddressLayout midi2_message = libremidi_c_h.C_POINTER;
+    public static final AddressLayout libremidi_midi2_message = libremidi_c_h.C_POINTER;
     /**
      * {@snippet lang=c :
      * typedef int64_t libremidi_timestamp
@@ -972,136 +1066,10 @@ public class libremidi_c_h {
     public static int Custom() {
         return Custom;
     }
-    private static final int UNSPECIFIED = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.UNSPECIFIED = 0
-     * }
-     */
-    public static int UNSPECIFIED() {
-        return UNSPECIFIED;
-    }
-    private static final int COREMIDI = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.COREMIDI = 1
-     * }
-     */
-    public static int COREMIDI() {
-        return COREMIDI;
-    }
-    private static final int ALSA_SEQ = (int)2L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.ALSA_SEQ = 2
-     * }
-     */
-    public static int ALSA_SEQ() {
-        return ALSA_SEQ;
-    }
-    private static final int ALSA_RAW = (int)3L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.ALSA_RAW = 3
-     * }
-     */
-    public static int ALSA_RAW() {
-        return ALSA_RAW;
-    }
-    private static final int JACK_MIDI = (int)4L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.JACK_MIDI = 4
-     * }
-     */
-    public static int JACK_MIDI() {
-        return JACK_MIDI;
-    }
-    private static final int WINDOWS_MM = (int)5L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.WINDOWS_MM = 5
-     * }
-     */
-    public static int WINDOWS_MM() {
-        return WINDOWS_MM;
-    }
-    private static final int WINDOWS_UWP = (int)6L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.WINDOWS_UWP = 6
-     * }
-     */
-    public static int WINDOWS_UWP() {
-        return WINDOWS_UWP;
-    }
-    private static final int WEBMIDI = (int)7L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.WEBMIDI = 7
-     * }
-     */
-    public static int WEBMIDI() {
-        return WEBMIDI;
-    }
-    private static final int PIPEWIRE = (int)8L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.PIPEWIRE = 8
-     * }
-     */
-    public static int PIPEWIRE() {
-        return PIPEWIRE;
-    }
-    private static final int ALSA_RAW_UMP = (int)9L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.ALSA_RAW_UMP = 9
-     * }
-     */
-    public static int ALSA_RAW_UMP() {
-        return ALSA_RAW_UMP;
-    }
-    private static final int ALSA_SEQ_UMP = (int)10L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.ALSA_SEQ_UMP = 10
-     * }
-     */
-    public static int ALSA_SEQ_UMP() {
-        return ALSA_SEQ_UMP;
-    }
-    private static final int COREMIDI_UMP = (int)11L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.COREMIDI_UMP = 11
-     * }
-     */
-    public static int COREMIDI_UMP() {
-        return COREMIDI_UMP;
-    }
-    private static final int WINDOWS_MIDI_SERVICES = (int)12L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.WINDOWS_MIDI_SERVICES = 12
-     * }
-     */
-    public static int WINDOWS_MIDI_SERVICES() {
-        return WINDOWS_MIDI_SERVICES;
-    }
-    private static final int DUMMY = (int)13L;
-    /**
-     * {@snippet lang=c :
-     * enum libremidi_api.DUMMY = 13
-     * }
-     */
-    public static int DUMMY() {
-        return DUMMY;
-    }
     private static final int Observer = (int)0L;
     /**
      * {@snippet lang=c :
-     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:72:3).Observer = 0
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:51:3).Observer = 0
      * }
      */
     public static int Observer() {
@@ -1110,7 +1078,7 @@ public class libremidi_c_h {
     private static final int Input = (int)1L;
     /**
      * {@snippet lang=c :
-     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:72:3).Input = 1
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:51:3).Input = 1
      * }
      */
     public static int Input() {
@@ -1119,29 +1087,393 @@ public class libremidi_c_h {
     private static final int Output = (int)2L;
     /**
      * {@snippet lang=c :
-     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:72:3).Output = 2
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:51:3).Output = 2
      * }
      */
     public static int Output() {
         return Output;
     }
-    private static final int MIDI1 = (int)0L;
+    private static final int MIDI1 = (int)2L;
     /**
      * {@snippet lang=c :
-     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:124:3).MIDI1 = 0
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:116:3).MIDI1 = 2
      * }
      */
     public static int MIDI1() {
         return MIDI1;
     }
-    private static final int MIDI2 = (int)1L;
+    private static final int MIDI1_RAW = (int)4L;
     /**
      * {@snippet lang=c :
-     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:124:3).MIDI2 = 1
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:116:3).MIDI1_RAW = 4
+     * }
+     */
+    public static int MIDI1_RAW() {
+        return MIDI1_RAW;
+    }
+    private static final int MIDI2 = (int)8L;
+    /**
+     * {@snippet lang=c :
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:116:3).MIDI2 = 8
      * }
      */
     public static int MIDI2() {
         return MIDI2;
+    }
+    private static final int MIDI2_RAW = (int)16L;
+    /**
+     * {@snippet lang=c :
+     * enum enum (unnamed at ./external/libremidi/include/libremidi/libremidi-c.h:116:3).MIDI2_RAW = 16
+     * }
+     */
+    public static int MIDI2_RAW() {
+        return MIDI2_RAW;
+    }
+
+    private static class libremidi_get_version {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            libremidi_c_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_get_version");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *libremidi_get_version(void)
+     * }
+     */
+    public static FunctionDescriptor libremidi_get_version$descriptor() {
+        return libremidi_get_version.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *libremidi_get_version(void)
+     * }
+     */
+    public static MethodHandle libremidi_get_version$handle() {
+        return libremidi_get_version.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *libremidi_get_version(void)
+     * }
+     */
+    public static MemorySegment libremidi_get_version$address() {
+        return libremidi_get_version.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *libremidi_get_version(void)
+     * }
+     */
+    public static MemorySegment libremidi_get_version() {
+        var mh$ = libremidi_get_version.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_get_version");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class libremidi_midi1_available_apis {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            libremidi_c_h.C_POINTER,
+            libremidi_c_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_midi1_available_apis");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void libremidi_midi1_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static FunctionDescriptor libremidi_midi1_available_apis$descriptor() {
+        return libremidi_midi1_available_apis.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void libremidi_midi1_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static MethodHandle libremidi_midi1_available_apis$handle() {
+        return libremidi_midi1_available_apis.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void libremidi_midi1_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static MemorySegment libremidi_midi1_available_apis$address() {
+        return libremidi_midi1_available_apis.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void libremidi_midi1_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static void libremidi_midi1_available_apis(MemorySegment ctx, MemorySegment x1) {
+        var mh$ = libremidi_midi1_available_apis.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_midi1_available_apis", ctx, x1);
+            }
+            mh$.invokeExact(ctx, x1);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class libremidi_midi2_available_apis {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            libremidi_c_h.C_POINTER,
+            libremidi_c_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_midi2_available_apis");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void libremidi_midi2_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static FunctionDescriptor libremidi_midi2_available_apis$descriptor() {
+        return libremidi_midi2_available_apis.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void libremidi_midi2_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static MethodHandle libremidi_midi2_available_apis$handle() {
+        return libremidi_midi2_available_apis.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void libremidi_midi2_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static MemorySegment libremidi_midi2_available_apis$address() {
+        return libremidi_midi2_available_apis.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void libremidi_midi2_available_apis(void *ctx, void (*)(void *, libremidi_api))
+     * }
+     */
+    public static void libremidi_midi2_available_apis(MemorySegment ctx, MemorySegment x1) {
+        var mh$ = libremidi_midi2_available_apis.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_midi2_available_apis", ctx, x1);
+            }
+            mh$.invokeExact(ctx, x1);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class libremidi_api_identifier {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            libremidi_c_h.C_POINTER,
+            libremidi_c_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_api_identifier");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_identifier(libremidi_api)
+     * }
+     */
+    public static FunctionDescriptor libremidi_api_identifier$descriptor() {
+        return libremidi_api_identifier.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_identifier(libremidi_api)
+     * }
+     */
+    public static MethodHandle libremidi_api_identifier$handle() {
+        return libremidi_api_identifier.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_identifier(libremidi_api)
+     * }
+     */
+    public static MemorySegment libremidi_api_identifier$address() {
+        return libremidi_api_identifier.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *libremidi_api_identifier(libremidi_api)
+     * }
+     */
+    public static MemorySegment libremidi_api_identifier(int x0) {
+        var mh$ = libremidi_api_identifier.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_api_identifier", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class libremidi_api_display_name {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            libremidi_c_h.C_POINTER,
+            libremidi_c_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_api_display_name");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_display_name(libremidi_api)
+     * }
+     */
+    public static FunctionDescriptor libremidi_api_display_name$descriptor() {
+        return libremidi_api_display_name.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_display_name(libremidi_api)
+     * }
+     */
+    public static MethodHandle libremidi_api_display_name$handle() {
+        return libremidi_api_display_name.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *libremidi_api_display_name(libremidi_api)
+     * }
+     */
+    public static MemorySegment libremidi_api_display_name$address() {
+        return libremidi_api_display_name.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *libremidi_api_display_name(libremidi_api)
+     * }
+     */
+    public static MemorySegment libremidi_api_display_name(int x0) {
+        var mh$ = libremidi_api_display_name.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_api_display_name", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class libremidi_get_compiled_api_by_identifier {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            libremidi_c_h.C_INT,
+            libremidi_c_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = libremidi_c_h.findOrThrow("libremidi_get_compiled_api_by_identifier");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * libremidi_api libremidi_get_compiled_api_by_identifier(const char *)
+     * }
+     */
+    public static FunctionDescriptor libremidi_get_compiled_api_by_identifier$descriptor() {
+        return libremidi_get_compiled_api_by_identifier.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * libremidi_api libremidi_get_compiled_api_by_identifier(const char *)
+     * }
+     */
+    public static MethodHandle libremidi_get_compiled_api_by_identifier$handle() {
+        return libremidi_get_compiled_api_by_identifier.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * libremidi_api libremidi_get_compiled_api_by_identifier(const char *)
+     * }
+     */
+    public static MemorySegment libremidi_get_compiled_api_by_identifier$address() {
+        return libremidi_get_compiled_api_by_identifier.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * libremidi_api libremidi_get_compiled_api_by_identifier(const char *)
+     * }
+     */
+    public static int libremidi_get_compiled_api_by_identifier(MemorySegment x0) {
+        var mh$ = libremidi_get_compiled_api_by_identifier.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("libremidi_get_compiled_api_by_identifier", x0);
+            }
+            return (int)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
     }
 
     private static class libremidi_midi_api_configuration_init {
@@ -2278,7 +2610,7 @@ public class libremidi_c_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static FunctionDescriptor libremidi_midi_out_send_message$descriptor() {
@@ -2288,7 +2620,7 @@ public class libremidi_c_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static MethodHandle libremidi_midi_out_send_message$handle() {
@@ -2298,7 +2630,7 @@ public class libremidi_c_h {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static MemorySegment libremidi_midi_out_send_message$address() {
@@ -2307,7 +2639,7 @@ public class libremidi_c_h {
 
     /**
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_send_message(libremidi_midi_out_handle *, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static int libremidi_midi_out_send_message(MemorySegment x0, MemorySegment x1, long x2) {
@@ -2338,7 +2670,7 @@ public class libremidi_c_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static FunctionDescriptor libremidi_midi_out_send_ump$descriptor() {
@@ -2348,7 +2680,7 @@ public class libremidi_c_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static MethodHandle libremidi_midi_out_send_ump$handle() {
@@ -2358,7 +2690,7 @@ public class libremidi_c_h {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static MemorySegment libremidi_midi_out_send_ump$address() {
@@ -2367,7 +2699,7 @@ public class libremidi_c_h {
 
     /**
      * {@snippet lang=c :
-     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_send_ump(libremidi_midi_out_handle *, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static int libremidi_midi_out_send_ump(MemorySegment x0, MemorySegment x1, long x2) {
@@ -2399,7 +2731,7 @@ public class libremidi_c_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static FunctionDescriptor libremidi_midi_out_schedule_message$descriptor() {
@@ -2409,7 +2741,7 @@ public class libremidi_c_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static MethodHandle libremidi_midi_out_schedule_message$handle() {
@@ -2419,7 +2751,7 @@ public class libremidi_c_h {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static MemorySegment libremidi_midi_out_schedule_message$address() {
@@ -2428,7 +2760,7 @@ public class libremidi_c_h {
 
     /**
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const midi1_symbol *, size_t)
+     * int libremidi_midi_out_schedule_message(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi1_symbol *, size_t)
      * }
      */
     public static int libremidi_midi_out_schedule_message(MemorySegment x0, long ts, MemorySegment x2, long x3) {
@@ -2460,7 +2792,7 @@ public class libremidi_c_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static FunctionDescriptor libremidi_midi_out_schedule_ump$descriptor() {
@@ -2470,7 +2802,7 @@ public class libremidi_c_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static MethodHandle libremidi_midi_out_schedule_ump$handle() {
@@ -2480,7 +2812,7 @@ public class libremidi_c_h {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static MemorySegment libremidi_midi_out_schedule_ump$address() {
@@ -2489,7 +2821,7 @@ public class libremidi_c_h {
 
     /**
      * {@snippet lang=c :
-     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const midi2_symbol *, size_t)
+     * int libremidi_midi_out_schedule_ump(libremidi_midi_out_handle *, int64_t ts, const libremidi_midi2_symbol *, size_t)
      * }
      */
     public static int libremidi_midi_out_schedule_ump(MemorySegment x0, long ts, MemorySegment x2, long x3) {
@@ -2617,15 +2949,6 @@ public class libremidi_c_h {
      */
     public static MemorySegment __DARWIN_NULL() {
         return __DARWIN_NULL;
-    }
-    private static final long USER_ADDR_NULL = 0L;
-    /**
-     * {@snippet lang=c :
-     * #define USER_ADDR_NULL 0
-     * }
-     */
-    public static long USER_ADDR_NULL() {
-        return USER_ADDR_NULL;
     }
     private static final long INT64_MAX = 9223372036854775807L;
     /**

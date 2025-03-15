@@ -30,14 +30,12 @@ Darwin arm64, and Darwin x86_64 will be built).
 
 ## jextract issue and workarounds
 
-<del>
 Currently I do not run jextract at build time because it cannot generate
 valid code for unnamed union within unnamed struct (which is actually used
 in `libremidi-c.h`). They are manually rewritten.
-</del>
 
-We run `jextract.libraries()` which I think runs jextract at run time, but
-I did not verify precisely.
+There are some command line instructions to build and run `jextract` tool from
+the submodule sources, in `libremidi-panama/build.gradle`.
 
 ## Licenses
 

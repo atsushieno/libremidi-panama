@@ -19,7 +19,7 @@ java {
 // io.github.krakowski.jextract
   external/jextract/build/jextract/bin/jextract
     external/libremidi/include/libremidi/libremidi-c.h
-    -I ../libremidi/include
+    -I external/libremidi/include
     -t dev.atsushieno.panama.libremidi
     --output libremidi-panama/src/main/java
 

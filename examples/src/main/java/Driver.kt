@@ -1,6 +1,7 @@
 import com.fizzed.jne.JNE
 import dev.atsushieno.panama.libremidi.libremidi_api_configuration
 import dev.atsushieno.panama.libremidi.libremidi_c_h
+import dev.atsushieno.panama.libremidi.libremidi_midi_configuration
 import dev.atsushieno.panama.libremidi.libremidi_observer_configuration
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
@@ -95,4 +96,8 @@ fun main(args: Array<String>) {
     val outPortGetName = { port: MemorySegment, nameBuf: MemorySegment, size: MemorySegment -> libremidi_c_h.libremidi_midi_out_port_name(port, nameBuf, size) }
     val outProc = OutputEnumerationCallback.allocate({ _, port -> commonProc(port, outPortGetName) }, arena)
     library.libremidi_midi_observer_enumerate_output_ports(observer, MemorySegment.NULL, outProc)
+
+    val conf = libremidi_midi_configuration.allocate(arena).also {
+        library.libremidi_midi_configuration_init(it)
+    }
 }

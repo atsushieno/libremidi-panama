@@ -15,27 +15,27 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct libremidi_observer_configuration {
- *     struct {
+ *     struct libremidi_observer_configuration_on_error {
  *         void *context;
  *         void (*callback)(void *, const char *, size_t, const void *);
  *     } on_error;
- *     struct {
+ *     struct libremidi_observer_configuration_on_warning {
  *         void *context;
  *         void (*callback)(void *, const char *, size_t, const void *);
  *     } on_warning;
- *     struct {
+ *     struct libremidi_observer_configuration_input_added {
  *         void *context;
  *         void (*callback)(void *, const libremidi_midi_in_port *);
  *     } input_added;
- *     struct {
+ *     struct libremidi_observer_configuration_input_removed {
  *         void *context;
  *         void (*callback)(void *, const libremidi_midi_in_port *);
  *     } input_removed;
- *     struct {
+ *     struct libremidi_observer_configuration_output_added {
  *         void *context;
  *         void (*callback)(void *, const libremidi_midi_out_port *);
  *     } output_added;
- *     struct {
+ *     struct libremidi_observer_configuration_output_removed {
  *         void *context;
  *         void (*callback)(void *, const libremidi_midi_out_port *);
  *     } output_removed;
@@ -53,12 +53,12 @@ public class libremidi_observer_configuration {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_63_3.layout().withName("on_error"),
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_68_3.layout().withName("on_warning"),
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_74_3.layout().withName("input_added"),
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_79_3.layout().withName("input_removed"),
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_84_3.layout().withName("output_added"),
-        libremidi_observer_configuration.struct_unnamed_at_libremidi_c_h_89_3.layout().withName("output_removed"),
+        libremidi_observer_configuration.libremidi_observer_configuration_on_error.layout().withName("on_error"),
+        libremidi_observer_configuration.libremidi_observer_configuration_on_warning.layout().withName("on_warning"),
+        libremidi_observer_configuration.libremidi_observer_configuration_input_added.layout().withName("input_added"),
+        libremidi_observer_configuration.libremidi_observer_configuration_input_removed.layout().withName("input_removed"),
+        libremidi_observer_configuration.libremidi_observer_configuration_output_added.layout().withName("output_added"),
+        libremidi_observer_configuration.libremidi_observer_configuration_output_removed.layout().withName("output_removed"),
         libremidi_c_h.C_BOOL.withName("track_hardware"),
         libremidi_c_h.C_BOOL.withName("track_virtual"),
         libremidi_c_h.C_BOOL.withName("track_any"),
@@ -75,22 +75,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_on_error {
      *     void *context;
      *     void (*callback)(void *, const char *, size_t, const void *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_63_3 {
+    public static class libremidi_observer_configuration_on_error {
 
-        struct_unnamed_at_libremidi_c_h_63_3() {
+        libremidi_observer_configuration_on_error() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_63_3");
+        ).withName("libremidi_observer_configuration_on_error");
 
         /**
          * The layout of this struct
@@ -293,10 +293,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_observer_configuration_on_error on_error
      * }
      */
     public static final GroupLayout on_error$layout() {
@@ -308,10 +305,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_observer_configuration_on_error on_error
      * }
      */
     public static final long on_error$offset() {
@@ -321,10 +315,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_observer_configuration_on_error on_error
      * }
      */
     public static MemorySegment on_error(MemorySegment struct) {
@@ -334,10 +325,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_observer_configuration_on_error on_error
      * }
      */
     public static void on_error(MemorySegment struct, MemorySegment fieldValue) {
@@ -346,22 +334,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_on_warning {
      *     void *context;
      *     void (*callback)(void *, const char *, size_t, const void *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_68_3 {
+    public static class libremidi_observer_configuration_on_warning {
 
-        struct_unnamed_at_libremidi_c_h_68_3() {
+        libremidi_observer_configuration_on_warning() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_68_3");
+        ).withName("libremidi_observer_configuration_on_warning");
 
         /**
          * The layout of this struct
@@ -564,10 +552,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_observer_configuration_on_warning on_warning
      * }
      */
     public static final GroupLayout on_warning$layout() {
@@ -579,10 +564,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_observer_configuration_on_warning on_warning
      * }
      */
     public static final long on_warning$offset() {
@@ -592,10 +574,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_observer_configuration_on_warning on_warning
      * }
      */
     public static MemorySegment on_warning(MemorySegment struct) {
@@ -605,10 +584,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_observer_configuration_on_warning on_warning
      * }
      */
     public static void on_warning(MemorySegment struct, MemorySegment fieldValue) {
@@ -617,22 +593,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_input_added {
      *     void *context;
      *     void (*callback)(void *, const libremidi_midi_in_port *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_74_3 {
+    public static class libremidi_observer_configuration_input_added {
 
-        struct_unnamed_at_libremidi_c_h_74_3() {
+        libremidi_observer_configuration_input_added() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_74_3");
+        ).withName("libremidi_observer_configuration_input_added");
 
         /**
          * The layout of this struct
@@ -833,10 +809,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_added
+     * struct libremidi_observer_configuration_input_added input_added
      * }
      */
     public static final GroupLayout input_added$layout() {
@@ -848,10 +821,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_added
+     * struct libremidi_observer_configuration_input_added input_added
      * }
      */
     public static final long input_added$offset() {
@@ -861,10 +831,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_added
+     * struct libremidi_observer_configuration_input_added input_added
      * }
      */
     public static MemorySegment input_added(MemorySegment struct) {
@@ -874,10 +841,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_added
+     * struct libremidi_observer_configuration_input_added input_added
      * }
      */
     public static void input_added(MemorySegment struct, MemorySegment fieldValue) {
@@ -886,22 +850,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_input_removed {
      *     void *context;
      *     void (*callback)(void *, const libremidi_midi_in_port *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_79_3 {
+    public static class libremidi_observer_configuration_input_removed {
 
-        struct_unnamed_at_libremidi_c_h_79_3() {
+        libremidi_observer_configuration_input_removed() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_79_3");
+        ).withName("libremidi_observer_configuration_input_removed");
 
         /**
          * The layout of this struct
@@ -1102,10 +1066,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_removed
+     * struct libremidi_observer_configuration_input_removed input_removed
      * }
      */
     public static final GroupLayout input_removed$layout() {
@@ -1117,10 +1078,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_removed
+     * struct libremidi_observer_configuration_input_removed input_removed
      * }
      */
     public static final long input_removed$offset() {
@@ -1130,10 +1088,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_removed
+     * struct libremidi_observer_configuration_input_removed input_removed
      * }
      */
     public static MemorySegment input_removed(MemorySegment struct) {
@@ -1143,10 +1098,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_in_port *);
-     * } input_removed
+     * struct libremidi_observer_configuration_input_removed input_removed
      * }
      */
     public static void input_removed(MemorySegment struct, MemorySegment fieldValue) {
@@ -1155,22 +1107,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_output_added {
      *     void *context;
      *     void (*callback)(void *, const libremidi_midi_out_port *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_84_3 {
+    public static class libremidi_observer_configuration_output_added {
 
-        struct_unnamed_at_libremidi_c_h_84_3() {
+        libremidi_observer_configuration_output_added() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_84_3");
+        ).withName("libremidi_observer_configuration_output_added");
 
         /**
          * The layout of this struct
@@ -1371,10 +1323,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_added
+     * struct libremidi_observer_configuration_output_added output_added
      * }
      */
     public static final GroupLayout output_added$layout() {
@@ -1386,10 +1335,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_added
+     * struct libremidi_observer_configuration_output_added output_added
      * }
      */
     public static final long output_added$offset() {
@@ -1399,10 +1345,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_added
+     * struct libremidi_observer_configuration_output_added output_added
      * }
      */
     public static MemorySegment output_added(MemorySegment struct) {
@@ -1412,10 +1355,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_added
+     * struct libremidi_observer_configuration_output_added output_added
      * }
      */
     public static void output_added(MemorySegment struct, MemorySegment fieldValue) {
@@ -1424,22 +1364,22 @@ public class libremidi_observer_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_observer_configuration_output_removed {
      *     void *context;
      *     void (*callback)(void *, const libremidi_midi_out_port *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_89_3 {
+    public static class libremidi_observer_configuration_output_removed {
 
-        struct_unnamed_at_libremidi_c_h_89_3() {
+        libremidi_observer_configuration_output_removed() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_89_3");
+        ).withName("libremidi_observer_configuration_output_removed");
 
         /**
          * The layout of this struct
@@ -1640,10 +1580,7 @@ public class libremidi_observer_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_removed
+     * struct libremidi_observer_configuration_output_removed output_removed
      * }
      */
     public static final GroupLayout output_removed$layout() {
@@ -1655,10 +1592,7 @@ public class libremidi_observer_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_removed
+     * struct libremidi_observer_configuration_output_removed output_removed
      * }
      */
     public static final long output_removed$offset() {
@@ -1668,10 +1602,7 @@ public class libremidi_observer_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_removed
+     * struct libremidi_observer_configuration_output_removed output_removed
      * }
      */
     public static MemorySegment output_removed(MemorySegment struct) {
@@ -1681,10 +1612,7 @@ public class libremidi_observer_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const libremidi_midi_out_port *);
-     * } output_removed
+     * struct libremidi_observer_configuration_output_removed output_removed
      * }
      */
     public static void output_removed(MemorySegment struct, MemorySegment fieldValue) {

@@ -21,25 +21,25 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *         MIDI2 = (1 << 3),
  *         MIDI2_RAW = (1 << 4)
  *     } version;
- *     union {
+ *     union in_or_out_port {
  *         libremidi_midi_in_port *in_port;
  *         libremidi_midi_out_port *out_port;
- *     };
- *     union {
+ *     } in_or_out_port;
+ *     union on_midi_1_or_2_callback {
  *         libremidi_midi1_callback on_midi1_message;
  *         libremidi_midi1_callback on_midi1_raw_data;
  *         libremidi_midi2_callback on_midi2_message;
  *         libremidi_midi2_callback on_midi2_raw_data;
- *     };
- *     struct {
+ *     } on_midi_1_or_2_callback;
+ *     struct get_timestamp {
  *         void *context;
  *         libremidi_timestamp (*callback)(void *, libremidi_timestamp);
  *     } get_timestamp;
- *     struct {
+ *     struct libremidi_midi_configuration_on_error {
  *         void *context;
  *         void (*callback)(void *, const char *, size_t, const void *);
  *     } on_error;
- *     struct {
+ *     struct libremidi_midi_configuration_on_warning {
  *         void *context;
  *         void (*callback)(void *, const char *, size_t, const void *);
  *     } on_warning;
@@ -61,19 +61,11 @@ public class libremidi_midi_configuration {
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         libremidi_c_h.C_INT.withName("version"),
         MemoryLayout.paddingLayout(4),
-        MemoryLayout.unionLayout(
-            libremidi_c_h.C_POINTER.withName("in_port"),
-            libremidi_c_h.C_POINTER.withName("out_port")
-        ).withName("union_anonymous_at_libremidi_c_h_124_3"),
-        MemoryLayout.unionLayout(
-            libremidi_midi1_callback.layout().withName("on_midi1_message"),
-            libremidi_midi1_callback.layout().withName("on_midi1_raw_data"),
-            libremidi_midi2_callback.layout().withName("on_midi2_message"),
-            libremidi_midi2_callback.layout().withName("on_midi2_raw_data")
-        ).withName("union_anonymous_at_libremidi_c_h_130_3"),
-        libremidi_midi_configuration.struct_unnamed_at_libremidi_c_h_138_3.layout().withName("get_timestamp"),
-        libremidi_midi_configuration.struct_unnamed_at_libremidi_c_h_144_3.layout().withName("on_error"),
-        libremidi_midi_configuration.struct_unnamed_at_libremidi_c_h_149_3.layout().withName("on_warning"),
+        libremidi_midi_configuration.in_or_out_port.layout().withName("in_or_out_port"),
+        libremidi_midi_configuration.on_midi_1_or_2_callback.layout().withName("on_midi_1_or_2_callback"),
+        libremidi_midi_configuration.get_timestamp.layout().withName("get_timestamp"),
+        libremidi_midi_configuration.libremidi_midi_configuration_on_error.layout().withName("on_error"),
+        libremidi_midi_configuration.libremidi_midi_configuration_on_warning.layout().withName("on_warning"),
         libremidi_c_h.C_POINTER.withName("port_name"),
         libremidi_c_h.C_BOOL.withName("virtual_port"),
         libremidi_c_h.C_BOOL.withName("ignore_sysex"),
@@ -153,288 +145,522 @@ public class libremidi_midi_configuration {
         struct.set(version$LAYOUT, version$OFFSET, fieldValue);
     }
 
-    private static final AddressLayout in_port$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$124:3"), groupElement("in_port"));
+    /**
+     * {@snippet lang=c :
+     * union in_or_out_port {
+     *     libremidi_midi_in_port *in_port;
+     *     libremidi_midi_out_port *out_port;
+     * }
+     * }
+     */
+    public static class in_or_out_port {
+
+        in_or_out_port() {
+            // Should not be called directly
+        }
+
+        private static final GroupLayout $LAYOUT = MemoryLayout.unionLayout(
+            libremidi_c_h.C_POINTER.withName("in_port"),
+            libremidi_c_h.C_POINTER.withName("out_port")
+        ).withName("in_or_out_port");
+
+        /**
+         * The layout of this union
+         */
+        public static final GroupLayout layout() {
+            return $LAYOUT;
+        }
+
+        private static final AddressLayout in_port$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("in_port"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi_in_port *in_port
+         * }
+         */
+        public static final AddressLayout in_port$layout() {
+            return in_port$LAYOUT;
+        }
+
+        private static final long in_port$OFFSET = $LAYOUT.byteOffset(groupElement("in_port"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi_in_port *in_port
+         * }
+         */
+        public static final long in_port$offset() {
+            return in_port$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi_in_port *in_port
+         * }
+         */
+        public static MemorySegment in_port(MemorySegment union) {
+            return union.get(in_port$LAYOUT, in_port$OFFSET);
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi_in_port *in_port
+         * }
+         */
+        public static void in_port(MemorySegment union, MemorySegment fieldValue) {
+            union.set(in_port$LAYOUT, in_port$OFFSET, fieldValue);
+        }
+
+        private static final AddressLayout out_port$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("out_port"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi_out_port *out_port
+         * }
+         */
+        public static final AddressLayout out_port$layout() {
+            return out_port$LAYOUT;
+        }
+
+        private static final long out_port$OFFSET = $LAYOUT.byteOffset(groupElement("out_port"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi_out_port *out_port
+         * }
+         */
+        public static final long out_port$offset() {
+            return out_port$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi_out_port *out_port
+         * }
+         */
+        public static MemorySegment out_port(MemorySegment union) {
+            return union.get(out_port$LAYOUT, out_port$OFFSET);
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi_out_port *out_port
+         * }
+         */
+        public static void out_port(MemorySegment union, MemorySegment fieldValue) {
+            union.set(out_port$LAYOUT, out_port$OFFSET, fieldValue);
+        }
+
+        /**
+         * Obtains a slice of {@code arrayParam} which selects the array element at {@code index}.
+         * The returned segment has address {@code arrayParam.address() + index * layout().byteSize()}
+         */
+        public static MemorySegment asSlice(MemorySegment array, long index) {
+            return array.asSlice(layout().byteSize() * index);
+        }
+
+        /**
+         * The size (in bytes) of this union
+         */
+        public static long sizeof() { return layout().byteSize(); }
+
+        /**
+         * Allocate a segment of size {@code layout().byteSize()} using {@code allocator}
+         */
+        public static MemorySegment allocate(SegmentAllocator allocator) {
+            return allocator.allocate(layout());
+        }
+
+        /**
+         * Allocate an array of size {@code elementCount} using {@code allocator}.
+         * The returned segment has size {@code elementCount * layout().byteSize()}.
+         */
+        public static MemorySegment allocateArray(long elementCount, SegmentAllocator allocator) {
+            return allocator.allocate(MemoryLayout.sequenceLayout(elementCount, layout()));
+        }
+
+        /**
+         * Reinterprets {@code addr} using target {@code arena} and {@code cleanupAction} (if any).
+         * The returned segment has size {@code layout().byteSize()}
+         */
+        public static MemorySegment reinterpret(MemorySegment addr, Arena arena, Consumer<MemorySegment> cleanup) {
+            return reinterpret(addr, 1, arena, cleanup);
+        }
+
+        /**
+         * Reinterprets {@code addr} using target {@code arena} and {@code cleanupAction} (if any).
+         * The returned segment has size {@code elementCount * layout().byteSize()}
+         */
+        public static MemorySegment reinterpret(MemorySegment addr, long elementCount, Arena arena, Consumer<MemorySegment> cleanup) {
+            return addr.reinterpret(layout().byteSize() * elementCount, arena, cleanup);
+        }
+    }
+
+    private static final GroupLayout in_or_out_port$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("in_or_out_port"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * libremidi_midi_in_port *in_port
+     * union in_or_out_port in_or_out_port
      * }
      */
-    public static final AddressLayout in_port$layout() {
-        return in_port$LAYOUT;
+    public static final GroupLayout in_or_out_port$layout() {
+        return in_or_out_port$LAYOUT;
     }
 
-    private static final long in_port$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$124:3"), groupElement("in_port"));
+    private static final long in_or_out_port$OFFSET = $LAYOUT.byteOffset(groupElement("in_or_out_port"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * libremidi_midi_in_port *in_port
+     * union in_or_out_port in_or_out_port
      * }
      */
-    public static final long in_port$offset() {
-        return in_port$OFFSET;
+    public static final long in_or_out_port$offset() {
+        return in_or_out_port$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * libremidi_midi_in_port *in_port
+     * union in_or_out_port in_or_out_port
      * }
      */
-    public static MemorySegment in_port(MemorySegment struct) {
-        return struct.get(in_port$LAYOUT, in_port$OFFSET);
+    public static MemorySegment in_or_out_port(MemorySegment struct) {
+        return struct.asSlice(in_or_out_port$OFFSET, in_or_out_port$LAYOUT.byteSize());
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * libremidi_midi_in_port *in_port
+     * union in_or_out_port in_or_out_port
      * }
      */
-    public static void in_port(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(in_port$LAYOUT, in_port$OFFSET, fieldValue);
+    public static void in_or_out_port(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, in_or_out_port$OFFSET, in_or_out_port$LAYOUT.byteSize());
     }
 
-    private static final AddressLayout out_port$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$124:3"), groupElement("out_port"));
+    /**
+     * {@snippet lang=c :
+     * union on_midi_1_or_2_callback {
+     *     libremidi_midi1_callback on_midi1_message;
+     *     libremidi_midi1_callback on_midi1_raw_data;
+     *     libremidi_midi2_callback on_midi2_message;
+     *     libremidi_midi2_callback on_midi2_raw_data;
+     * }
+     * }
+     */
+    public static class on_midi_1_or_2_callback {
+
+        on_midi_1_or_2_callback() {
+            // Should not be called directly
+        }
+
+        private static final GroupLayout $LAYOUT = MemoryLayout.unionLayout(
+            libremidi_midi1_callback.layout().withName("on_midi1_message"),
+            libremidi_midi1_callback.layout().withName("on_midi1_raw_data"),
+            libremidi_midi2_callback.layout().withName("on_midi2_message"),
+            libremidi_midi2_callback.layout().withName("on_midi2_raw_data")
+        ).withName("on_midi_1_or_2_callback");
+
+        /**
+         * The layout of this union
+         */
+        public static final GroupLayout layout() {
+            return $LAYOUT;
+        }
+
+        private static final GroupLayout on_midi1_message$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("on_midi1_message"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_message
+         * }
+         */
+        public static final GroupLayout on_midi1_message$layout() {
+            return on_midi1_message$LAYOUT;
+        }
+
+        private static final long on_midi1_message$OFFSET = $LAYOUT.byteOffset(groupElement("on_midi1_message"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_message
+         * }
+         */
+        public static final long on_midi1_message$offset() {
+            return on_midi1_message$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_message
+         * }
+         */
+        public static MemorySegment on_midi1_message(MemorySegment union) {
+            return union.asSlice(on_midi1_message$OFFSET, on_midi1_message$LAYOUT.byteSize());
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_message
+         * }
+         */
+        public static void on_midi1_message(MemorySegment union, MemorySegment fieldValue) {
+            MemorySegment.copy(fieldValue, 0L, union, on_midi1_message$OFFSET, on_midi1_message$LAYOUT.byteSize());
+        }
+
+        private static final GroupLayout on_midi1_raw_data$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("on_midi1_raw_data"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_raw_data
+         * }
+         */
+        public static final GroupLayout on_midi1_raw_data$layout() {
+            return on_midi1_raw_data$LAYOUT;
+        }
+
+        private static final long on_midi1_raw_data$OFFSET = $LAYOUT.byteOffset(groupElement("on_midi1_raw_data"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_raw_data
+         * }
+         */
+        public static final long on_midi1_raw_data$offset() {
+            return on_midi1_raw_data$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_raw_data
+         * }
+         */
+        public static MemorySegment on_midi1_raw_data(MemorySegment union) {
+            return union.asSlice(on_midi1_raw_data$OFFSET, on_midi1_raw_data$LAYOUT.byteSize());
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi1_callback on_midi1_raw_data
+         * }
+         */
+        public static void on_midi1_raw_data(MemorySegment union, MemorySegment fieldValue) {
+            MemorySegment.copy(fieldValue, 0L, union, on_midi1_raw_data$OFFSET, on_midi1_raw_data$LAYOUT.byteSize());
+        }
+
+        private static final GroupLayout on_midi2_message$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("on_midi2_message"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_message
+         * }
+         */
+        public static final GroupLayout on_midi2_message$layout() {
+            return on_midi2_message$LAYOUT;
+        }
+
+        private static final long on_midi2_message$OFFSET = $LAYOUT.byteOffset(groupElement("on_midi2_message"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_message
+         * }
+         */
+        public static final long on_midi2_message$offset() {
+            return on_midi2_message$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_message
+         * }
+         */
+        public static MemorySegment on_midi2_message(MemorySegment union) {
+            return union.asSlice(on_midi2_message$OFFSET, on_midi2_message$LAYOUT.byteSize());
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_message
+         * }
+         */
+        public static void on_midi2_message(MemorySegment union, MemorySegment fieldValue) {
+            MemorySegment.copy(fieldValue, 0L, union, on_midi2_message$OFFSET, on_midi2_message$LAYOUT.byteSize());
+        }
+
+        private static final GroupLayout on_midi2_raw_data$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("on_midi2_raw_data"));
+
+        /**
+         * Layout for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_raw_data
+         * }
+         */
+        public static final GroupLayout on_midi2_raw_data$layout() {
+            return on_midi2_raw_data$LAYOUT;
+        }
+
+        private static final long on_midi2_raw_data$OFFSET = $LAYOUT.byteOffset(groupElement("on_midi2_raw_data"));
+
+        /**
+         * Offset for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_raw_data
+         * }
+         */
+        public static final long on_midi2_raw_data$offset() {
+            return on_midi2_raw_data$OFFSET;
+        }
+
+        /**
+         * Getter for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_raw_data
+         * }
+         */
+        public static MemorySegment on_midi2_raw_data(MemorySegment union) {
+            return union.asSlice(on_midi2_raw_data$OFFSET, on_midi2_raw_data$LAYOUT.byteSize());
+        }
+
+        /**
+         * Setter for field:
+         * {@snippet lang=c :
+         * libremidi_midi2_callback on_midi2_raw_data
+         * }
+         */
+        public static void on_midi2_raw_data(MemorySegment union, MemorySegment fieldValue) {
+            MemorySegment.copy(fieldValue, 0L, union, on_midi2_raw_data$OFFSET, on_midi2_raw_data$LAYOUT.byteSize());
+        }
+
+        /**
+         * Obtains a slice of {@code arrayParam} which selects the array element at {@code index}.
+         * The returned segment has address {@code arrayParam.address() + index * layout().byteSize()}
+         */
+        public static MemorySegment asSlice(MemorySegment array, long index) {
+            return array.asSlice(layout().byteSize() * index);
+        }
+
+        /**
+         * The size (in bytes) of this union
+         */
+        public static long sizeof() { return layout().byteSize(); }
+
+        /**
+         * Allocate a segment of size {@code layout().byteSize()} using {@code allocator}
+         */
+        public static MemorySegment allocate(SegmentAllocator allocator) {
+            return allocator.allocate(layout());
+        }
+
+        /**
+         * Allocate an array of size {@code elementCount} using {@code allocator}.
+         * The returned segment has size {@code elementCount * layout().byteSize()}.
+         */
+        public static MemorySegment allocateArray(long elementCount, SegmentAllocator allocator) {
+            return allocator.allocate(MemoryLayout.sequenceLayout(elementCount, layout()));
+        }
+
+        /**
+         * Reinterprets {@code addr} using target {@code arena} and {@code cleanupAction} (if any).
+         * The returned segment has size {@code layout().byteSize()}
+         */
+        public static MemorySegment reinterpret(MemorySegment addr, Arena arena, Consumer<MemorySegment> cleanup) {
+            return reinterpret(addr, 1, arena, cleanup);
+        }
+
+        /**
+         * Reinterprets {@code addr} using target {@code arena} and {@code cleanupAction} (if any).
+         * The returned segment has size {@code elementCount * layout().byteSize()}
+         */
+        public static MemorySegment reinterpret(MemorySegment addr, long elementCount, Arena arena, Consumer<MemorySegment> cleanup) {
+            return addr.reinterpret(layout().byteSize() * elementCount, arena, cleanup);
+        }
+    }
+
+    private static final GroupLayout on_midi_1_or_2_callback$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("on_midi_1_or_2_callback"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * libremidi_midi_out_port *out_port
+     * union on_midi_1_or_2_callback on_midi_1_or_2_callback
      * }
      */
-    public static final AddressLayout out_port$layout() {
-        return out_port$LAYOUT;
+    public static final GroupLayout on_midi_1_or_2_callback$layout() {
+        return on_midi_1_or_2_callback$LAYOUT;
     }
 
-    private static final long out_port$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$124:3"), groupElement("out_port"));
+    private static final long on_midi_1_or_2_callback$OFFSET = $LAYOUT.byteOffset(groupElement("on_midi_1_or_2_callback"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * libremidi_midi_out_port *out_port
+     * union on_midi_1_or_2_callback on_midi_1_or_2_callback
      * }
      */
-    public static final long out_port$offset() {
-        return out_port$OFFSET;
+    public static final long on_midi_1_or_2_callback$offset() {
+        return on_midi_1_or_2_callback$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * libremidi_midi_out_port *out_port
+     * union on_midi_1_or_2_callback on_midi_1_or_2_callback
      * }
      */
-    public static MemorySegment out_port(MemorySegment struct) {
-        return struct.get(out_port$LAYOUT, out_port$OFFSET);
+    public static MemorySegment on_midi_1_or_2_callback(MemorySegment struct) {
+        return struct.asSlice(on_midi_1_or_2_callback$OFFSET, on_midi_1_or_2_callback$LAYOUT.byteSize());
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * libremidi_midi_out_port *out_port
+     * union on_midi_1_or_2_callback on_midi_1_or_2_callback
      * }
      */
-    public static void out_port(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(out_port$LAYOUT, out_port$OFFSET, fieldValue);
-    }
-
-    private static final GroupLayout on_midi1_message$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$130:3"), groupElement("on_midi1_message"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_message
-     * }
-     */
-    public static final GroupLayout on_midi1_message$layout() {
-        return on_midi1_message$LAYOUT;
-    }
-
-    private static final long on_midi1_message$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$130:3"), groupElement("on_midi1_message"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_message
-     * }
-     */
-    public static final long on_midi1_message$offset() {
-        return on_midi1_message$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_message
-     * }
-     */
-    public static MemorySegment on_midi1_message(MemorySegment struct) {
-        return struct.asSlice(on_midi1_message$OFFSET, on_midi1_message$LAYOUT.byteSize());
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_message
-     * }
-     */
-    public static void on_midi1_message(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, on_midi1_message$OFFSET, on_midi1_message$LAYOUT.byteSize());
-    }
-
-    private static final GroupLayout on_midi1_raw_data$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$130:3"), groupElement("on_midi1_raw_data"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_raw_data
-     * }
-     */
-    public static final GroupLayout on_midi1_raw_data$layout() {
-        return on_midi1_raw_data$LAYOUT;
-    }
-
-    private static final long on_midi1_raw_data$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$130:3"), groupElement("on_midi1_raw_data"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_raw_data
-     * }
-     */
-    public static final long on_midi1_raw_data$offset() {
-        return on_midi1_raw_data$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_raw_data
-     * }
-     */
-    public static MemorySegment on_midi1_raw_data(MemorySegment struct) {
-        return struct.asSlice(on_midi1_raw_data$OFFSET, on_midi1_raw_data$LAYOUT.byteSize());
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * libremidi_midi1_callback on_midi1_raw_data
-     * }
-     */
-    public static void on_midi1_raw_data(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, on_midi1_raw_data$OFFSET, on_midi1_raw_data$LAYOUT.byteSize());
-    }
-
-    private static final GroupLayout on_midi2_message$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$130:3"), groupElement("on_midi2_message"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_message
-     * }
-     */
-    public static final GroupLayout on_midi2_message$layout() {
-        return on_midi2_message$LAYOUT;
-    }
-
-    private static final long on_midi2_message$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$130:3"), groupElement("on_midi2_message"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_message
-     * }
-     */
-    public static final long on_midi2_message$offset() {
-        return on_midi2_message$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_message
-     * }
-     */
-    public static MemorySegment on_midi2_message(MemorySegment struct) {
-        return struct.asSlice(on_midi2_message$OFFSET, on_midi2_message$LAYOUT.byteSize());
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_message
-     * }
-     */
-    public static void on_midi2_message(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, on_midi2_message$OFFSET, on_midi2_message$LAYOUT.byteSize());
-    }
-
-    private static final GroupLayout on_midi2_raw_data$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$130:3"), groupElement("on_midi2_raw_data"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_raw_data
-     * }
-     */
-    public static final GroupLayout on_midi2_raw_data$layout() {
-        return on_midi2_raw_data$LAYOUT;
-    }
-
-    private static final long on_midi2_raw_data$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$130:3"), groupElement("on_midi2_raw_data"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_raw_data
-     * }
-     */
-    public static final long on_midi2_raw_data$offset() {
-        return on_midi2_raw_data$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_raw_data
-     * }
-     */
-    public static MemorySegment on_midi2_raw_data(MemorySegment struct) {
-        return struct.asSlice(on_midi2_raw_data$OFFSET, on_midi2_raw_data$LAYOUT.byteSize());
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * libremidi_midi2_callback on_midi2_raw_data
-     * }
-     */
-    public static void on_midi2_raw_data(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, on_midi2_raw_data$OFFSET, on_midi2_raw_data$LAYOUT.byteSize());
+    public static void on_midi_1_or_2_callback(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, on_midi_1_or_2_callback$OFFSET, on_midi_1_or_2_callback$LAYOUT.byteSize());
     }
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct get_timestamp {
      *     void *context;
      *     libremidi_timestamp (*callback)(void *, libremidi_timestamp);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_138_3 {
+    public static class get_timestamp {
 
-        struct_unnamed_at_libremidi_c_h_138_3() {
+        get_timestamp() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct unnamed_at_libremidi_c_h_138_3");
+        ).withName("get_timestamp");
 
         /**
          * The layout of this struct
@@ -636,10 +862,7 @@ public class libremidi_midi_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     libremidi_timestamp (*callback)(void *, libremidi_timestamp);
-     * } get_timestamp
+     * struct get_timestamp get_timestamp
      * }
      */
     public static final GroupLayout get_timestamp$layout() {
@@ -651,10 +874,7 @@ public class libremidi_midi_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     libremidi_timestamp (*callback)(void *, libremidi_timestamp);
-     * } get_timestamp
+     * struct get_timestamp get_timestamp
      * }
      */
     public static final long get_timestamp$offset() {
@@ -664,10 +884,7 @@ public class libremidi_midi_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     libremidi_timestamp (*callback)(void *, libremidi_timestamp);
-     * } get_timestamp
+     * struct get_timestamp get_timestamp
      * }
      */
     public static MemorySegment get_timestamp(MemorySegment struct) {
@@ -677,10 +894,7 @@ public class libremidi_midi_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     libremidi_timestamp (*callback)(void *, libremidi_timestamp);
-     * } get_timestamp
+     * struct get_timestamp get_timestamp
      * }
      */
     public static void get_timestamp(MemorySegment struct, MemorySegment fieldValue) {
@@ -689,22 +903,22 @@ public class libremidi_midi_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_midi_configuration_on_error {
      *     void *context;
      *     void (*callback)(void *, const char *, size_t, const void *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_144_3 {
+    public static class libremidi_midi_configuration_on_error {
 
-        struct_unnamed_at_libremidi_c_h_144_3() {
+        libremidi_midi_configuration_on_error() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct struct_unnamed_at_libremidi_c_h_144_3");
+        ).withName("libremidi_midi_configuration_on_error");
 
         /**
          * The layout of this struct
@@ -907,10 +1121,7 @@ public class libremidi_midi_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_midi_configuration_on_error on_error
      * }
      */
     public static final GroupLayout on_error$layout() {
@@ -922,10 +1133,7 @@ public class libremidi_midi_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_midi_configuration_on_error on_error
      * }
      */
     public static final long on_error$offset() {
@@ -935,10 +1143,7 @@ public class libremidi_midi_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_midi_configuration_on_error on_error
      * }
      */
     public static MemorySegment on_error(MemorySegment struct) {
@@ -948,10 +1153,7 @@ public class libremidi_midi_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_error
+     * struct libremidi_midi_configuration_on_error on_error
      * }
      */
     public static void on_error(MemorySegment struct, MemorySegment fieldValue) {
@@ -960,22 +1162,22 @@ public class libremidi_midi_configuration {
 
     /**
      * {@snippet lang=c :
-     * struct {
+     * struct libremidi_midi_configuration_on_warning {
      *     void *context;
      *     void (*callback)(void *, const char *, size_t, const void *);
      * }
      * }
      */
-    public static class struct_unnamed_at_libremidi_c_h_149_3 {
+    public static class libremidi_midi_configuration_on_warning {
 
-        struct_unnamed_at_libremidi_c_h_149_3() {
+        libremidi_midi_configuration_on_warning() {
             // Should not be called directly
         }
 
         private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
             libremidi_c_h.C_POINTER.withName("context"),
             libremidi_c_h.C_POINTER.withName("callback")
-        ).withName("struct_unnamed_at_libremidi_c_h_149_3");
+        ).withName("libremidi_midi_configuration_on_warning");
 
         /**
          * The layout of this struct
@@ -1178,10 +1380,7 @@ public class libremidi_midi_configuration {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_midi_configuration_on_warning on_warning
      * }
      */
     public static final GroupLayout on_warning$layout() {
@@ -1193,10 +1392,7 @@ public class libremidi_midi_configuration {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_midi_configuration_on_warning on_warning
      * }
      */
     public static final long on_warning$offset() {
@@ -1206,10 +1402,7 @@ public class libremidi_midi_configuration {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_midi_configuration_on_warning on_warning
      * }
      */
     public static MemorySegment on_warning(MemorySegment struct) {
@@ -1219,10 +1412,7 @@ public class libremidi_midi_configuration {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct {
-     *     void *context;
-     *     void (*callback)(void *, const char *, size_t, const void *);
-     * } on_warning
+     * struct libremidi_midi_configuration_on_warning on_warning
      * }
      */
     public static void on_warning(MemorySegment struct, MemorySegment fieldValue) {

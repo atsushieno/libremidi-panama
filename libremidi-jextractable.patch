@@ -1,0 +1,84 @@
+diff --git a/include/libremidi/libremidi-c.h b/include/libremidi/libremidi-c.h
+index c43d7e1..31dbf6a 100644
+--- a/include/libremidi/libremidi-c.h
++++ b/include/libremidi/libremidi-c.h
+@@ -60,33 +60,33 @@ typedef struct libremidi_api_configuration
+ 
+ typedef struct libremidi_observer_configuration
+ {
+-  struct
++  struct libremidi_observer_configuration_on_error
+   {
+     void* context;
+     void (*callback)(void* ctx, const char* error, size_t error_len, const void* source_location);
+   } on_error;
+-  struct
++  struct libremidi_observer_configuration_on_warning
+   {
+     void* context;
+     void (*callback)(void* ctx, const char* error, size_t error_len, const void* source_location);
+   } on_warning;
+ 
+-  struct
++  struct libremidi_observer_configuration_input_added
+   {
+     void* context;
+     void (*callback)(void* ctx, const libremidi_midi_in_port*);
+   } input_added;
+-  struct
++  struct libremidi_observer_configuration_input_removed
+   {
+     void* context;
+     void (*callback)(void* ctx, const libremidi_midi_in_port*);
+   } input_removed;
+-  struct
++  struct libremidi_observer_configuration_output_added
+   {
+     void* context;
+     void (*callback)(void* ctx, const libremidi_midi_out_port*);
+   } output_added;
+-  struct
++  struct libremidi_observer_configuration_output_removed
+   {
+     void* context;
+     void (*callback)(void* ctx, const libremidi_midi_out_port*);
+@@ -121,32 +121,32 @@ typedef struct libremidi_midi_configuration
+     MIDI2_RAW = (1 << 4)
+   } version;
+ 
+-  union
++  union in_or_out_port
+   {
+     libremidi_midi_in_port* in_port;
+     libremidi_midi_out_port* out_port;
+-  };
++  } in_or_out_port;
+ 
+-  union
++  union on_midi_1_or_2_callback
+   {
+     libremidi_midi1_callback on_midi1_message;
+     libremidi_midi1_callback on_midi1_raw_data;
+     libremidi_midi2_callback on_midi2_message;
+     libremidi_midi2_callback on_midi2_raw_data;
+-  };
++  } on_midi_1_or_2_callback;
+ 
+-  struct
++  struct get_timestamp
+   {
+     void* context;
+     libremidi_timestamp (*callback)(void* ctx, libremidi_timestamp);
+   } get_timestamp;
+ 
+-  struct
++  struct libremidi_midi_configuration_on_error
+   {
+     void* context;
+     void (*callback)(void* ctx, const char* error, size_t error_len, const void* source_location);
+   } on_error;
+-  struct
++  struct libremidi_midi_configuration_on_warning
+   {
+     void* context;
+     void (*callback)(void* ctx, const char* error, size_t error_len, const void* source_location);

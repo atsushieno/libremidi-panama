@@ -1,3 +1,81 @@
+diff --git a/include/libremidi/libremidi-c.cpp b/include/libremidi/libremidi-c.cpp
+index 18fd09e..ead910b 100644
+--- a/include/libremidi/libremidi-c.cpp
++++ b/include/libremidi/libremidi-c.cpp
+@@ -250,7 +250,7 @@ int libremidi_midi_in_new(
+ {
+   if (!out || !c)
+     return -EINVAL;
+-  if (!c->virtual_port && !c->in_port)
++  if (!c->virtual_port && !c->in_or_out_port.in_port)
+     return -EINVAL;
+ 
+   *out = nullptr;
+@@ -276,13 +276,14 @@ int libremidi_midi_in_new(
+             = [cb = c->get_timestamp](int64_t msg) { return cb.callback(cb.context, msg); };
+       }
+ 
+-      if (c->on_midi1_message.callback)
+-        conf.on_message = [cb = c->on_midi1_message](const libremidi::message& msg) {
++      if (c->on_midi_1_or_2_callback.on_midi1_message.callback) {
++        conf.on_message = [cb = c->on_midi_1_or_2_callback.on_midi1_message](const libremidi::message& msg) {
+           cb.callback(cb.context, msg.timestamp, msg.bytes.data(), msg.size());
+         };
+-      else if (c->on_midi1_raw_data.callback)
++      }
++      else if (c->on_midi_1_or_2_callback.on_midi1_raw_data.callback)
+       {
+-        conf.on_raw_data = [cb = c->on_midi1_raw_data](std::span<const uint8_t> msg, int64_t ts) {
++        conf.on_raw_data = [cb = c->on_midi_1_or_2_callback.on_midi1_raw_data](std::span<const uint8_t> msg, int64_t ts) {
+           cb.callback(cb.context, ts, msg.data(), msg.size());
+         };
+       }
+@@ -319,13 +320,14 @@ int libremidi_midi_in_new(
+             = [cb = c->get_timestamp](int64_t msg) { return cb.callback(cb.context, msg); };
+       }
+ 
+-      if (c->on_midi2_message.callback)
+-        conf.on_message = [cb = c->on_midi2_message](const libremidi::ump& msg) {
++      if (c->on_midi_1_or_2_callback.on_midi2_message.callback)
++        conf.on_message = [cb = c->on_midi_1_or_2_callback.on_midi2_message](const libremidi::ump& msg) {
+           cb.callback(cb.context, msg.timestamp, msg.data, msg.size());
+         };
+-      else if (c->on_midi2_raw_data.callback)
++      else if (c->on_midi_1_or_2_callback.on_midi2_raw_data.callback)
+       {
+-        conf.on_raw_data = [cb = c->on_midi2_raw_data](std::span<const uint32_t> msg, int64_t ts) {
++        conf.on_raw_data = [cb = c->on_midi_1_or_2_callback.on_midi2_raw_data](std::span<const uint32_t> msg, int64_t ts) {
++          fflush(stdout);
+           cb.callback(cb.context, ts, msg.data(), msg.size());
+         };
+       }
+@@ -366,7 +368,7 @@ int libremidi_midi_in_new(
+   }
+   else
+   {
+-    auto port = reinterpret_cast<const libremidi::input_port*>(c->in_port);
++    auto port = reinterpret_cast<const libremidi::input_port*>(c->in_or_out_port.in_port);
+     if (auto ret = ptr->self.open_port(*port); ret != stdx::error{})
+     {
+       *out = nullptr;
+@@ -403,7 +405,7 @@ int libremidi_midi_out_new(
+ {
+   if (!out || !c)
+     return -EINVAL;
+-  if (!c->virtual_port && !c->out_port)
++  if (!c->virtual_port && !c->in_or_out_port.out_port)
+     return -EINVAL;
+ 
+   *out = nullptr;
+@@ -442,7 +444,7 @@ int libremidi_midi_out_new(
+   }
+   else
+   {
+-    auto port = reinterpret_cast<const libremidi::output_port*>(c->in_port);
++    auto port = reinterpret_cast<const libremidi::output_port*>(c->in_or_out_port.in_port);
+     if (auto ret = ptr->self.open_port(*port); ret != stdx::error{})
+     {
+       *out = nullptr;
 diff --git a/include/libremidi/libremidi-c.h b/include/libremidi/libremidi-c.h
 index c43d7e1..31dbf6a 100644
 --- a/include/libremidi/libremidi-c.h

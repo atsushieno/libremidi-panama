@@ -537,6 +537,24 @@ public class libremidi_c_h {
     public static int NETWORK_UMP() {
         return NETWORK_UMP;
     }
+    private static final int JACK_UMP = (int)4102L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.JACK_UMP = 4102
+     * }
+     */
+    public static int JACK_UMP() {
+        return JACK_UMP;
+    }
+    private static final int PIPEWIRE_UMP = (int)4103L;
+    /**
+     * {@snippet lang=c :
+     * enum libremidi_api.PIPEWIRE_UMP = 4103
+     * }
+     */
+    public static int PIPEWIRE_UMP() {
+        return PIPEWIRE_UMP;
+    }
     private static final int DUMMY = (int)65535L;
     /**
      * {@snippet lang=c :

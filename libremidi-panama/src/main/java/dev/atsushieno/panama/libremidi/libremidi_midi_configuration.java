@@ -718,9 +718,9 @@ public class libremidi_midi_configuration {
          * libremidi_timestamp (*callback)(void *, libremidi_timestamp)
          * }
          */
-        public static class callback {
+        public final static class callback {
 
-            callback() {
+            private callback() {
                 // Should not be called directly
             }
 
@@ -759,9 +759,11 @@ public class libremidi_midi_configuration {
             /**
              * Invoke the upcall stub {@code funcPtr}, with given parameters
              */
-            public static long invoke(MemorySegment funcPtr,MemorySegment _x0, long _x1) {
+            public static long invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1) {
                 try {
                     return (long) DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+                } catch (Error | RuntimeException ex) {
+                    throw ex;
                 } catch (Throwable ex$) {
                     throw new AssertionError("should not reach here", ex$);
                 }
@@ -976,9 +978,9 @@ public class libremidi_midi_configuration {
          * void (*callback)(void *, const char *, size_t, const void *)
          * }
          */
-        public static class callback {
+        public final static class callback {
 
-            callback() {
+            private callback() {
                 // Should not be called directly
             }
 
@@ -1018,9 +1020,11 @@ public class libremidi_midi_configuration {
             /**
              * Invoke the upcall stub {@code funcPtr}, with given parameters
              */
-            public static void invoke(MemorySegment funcPtr,MemorySegment _x0, MemorySegment _x1, long _x2, MemorySegment _x3) {
+            public static void invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1, long _x2, MemorySegment _x3) {
                 try {
                      DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+                } catch (Error | RuntimeException ex) {
+                    throw ex;
                 } catch (Throwable ex$) {
                     throw new AssertionError("should not reach here", ex$);
                 }
@@ -1235,9 +1239,9 @@ public class libremidi_midi_configuration {
          * void (*callback)(void *, const char *, size_t, const void *)
          * }
          */
-        public static class callback {
+        public final static class callback {
 
-            callback() {
+            private callback() {
                 // Should not be called directly
             }
 
@@ -1277,9 +1281,11 @@ public class libremidi_midi_configuration {
             /**
              * Invoke the upcall stub {@code funcPtr}, with given parameters
              */
-            public static void invoke(MemorySegment funcPtr,MemorySegment _x0, MemorySegment _x1, long _x2, MemorySegment _x3) {
+            public static void invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1, long _x2, MemorySegment _x3) {
                 try {
                      DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+                } catch (Error | RuntimeException ex) {
+                    throw ex;
                 } catch (Throwable ex$) {
                     throw new AssertionError("should not reach here", ex$);
                 }

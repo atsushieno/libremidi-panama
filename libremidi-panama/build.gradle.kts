@@ -23,7 +23,7 @@ java {
    built jextract on OSX with:
      ./gradlew build
         -Pllvm_home=/Library/Developer/CommandLineTools/usr
-        -Pjdk22_home=/Users/atsushi/.sdkman/candidates/java/current
+        -Pjdk_home=`/usr/libexec/java_home`
 */
 /*
 jextract {

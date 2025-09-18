@@ -12,63 +12,24 @@ import java.util.stream.*;
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
-public class libremidi_c_h {
+public class libremidi_c_h extends libremidi_c_h$shared {
 
     libremidi_c_h() {
         // Should not be called directly
     }
 
     static final Arena LIBRARY_ARENA = Arena.ofAuto();
-    static final boolean TRACE_DOWNCALLS = Boolean.getBoolean("jextract.trace.downcalls");
 
-    static void traceDowncall(String name, Object... args) {
-         String traceArgs = Arrays.stream(args)
-                       .map(Object::toString)
-                       .collect(Collectors.joining(", "));
-         System.out.printf("%s(%s)\n", name, traceArgs);
-    }
-
+    // manually recovered
     static MemorySegment findOrThrow(String symbol) {
         var ret = SYMBOL_LOOKUP.find(symbol);
         if (ret.isPresent()) return ret.get();
         throw new RuntimeException("Symbol not found: " + symbol);
     }
 
-    static MethodHandle upcallHandle(Class<?> fi, String name, FunctionDescriptor fdesc) {
-        try {
-            return MethodHandles.lookup().findVirtual(fi, name, fdesc.toMethodType());
-        } catch (ReflectiveOperationException ex) {
-            throw new AssertionError(ex);
-        }
-    }
-
-    static MemoryLayout align(MemoryLayout layout, long align) {
-        return switch (layout) {
-            case PaddingLayout p -> p;
-            case ValueLayout v -> v.withByteAlignment(align);
-            case GroupLayout g -> {
-                MemoryLayout[] alignedMembers = g.memberLayouts().stream()
-                        .map(m -> align(m, align)).toArray(MemoryLayout[]::new);
-                yield g instanceof StructLayout ?
-                        MemoryLayout.structLayout(alignedMembers) : MemoryLayout.unionLayout(alignedMembers);
-            }
-            case SequenceLayout s -> MemoryLayout.sequenceLayout(s.elementCount(), align(s.elementLayout(), align));
-        };
-    }
-
     static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.loaderLookup()
             .or(Linker.nativeLinker().defaultLookup());
 
-    public static final ValueLayout.OfBoolean C_BOOL = (ValueLayout.OfBoolean) Linker.nativeLinker().canonicalLayouts().get("bool");
-    public static final ValueLayout.OfByte C_CHAR =(ValueLayout.OfByte)Linker.nativeLinker().canonicalLayouts().get("char");
-    public static final ValueLayout.OfShort C_SHORT = (ValueLayout.OfShort) Linker.nativeLinker().canonicalLayouts().get("short");
-    public static final ValueLayout.OfInt C_INT = (ValueLayout.OfInt) Linker.nativeLinker().canonicalLayouts().get("int");
-    public static final ValueLayout.OfLong C_LONG_LONG = (ValueLayout.OfLong) Linker.nativeLinker().canonicalLayouts().get("long long");
-    public static final ValueLayout.OfFloat C_FLOAT = (ValueLayout.OfFloat) Linker.nativeLinker().canonicalLayouts().get("float");
-    public static final ValueLayout.OfDouble C_DOUBLE = (ValueLayout.OfDouble) Linker.nativeLinker().canonicalLayouts().get("double");
-    public static final AddressLayout C_POINTER = ((AddressLayout) Linker.nativeLinker().canonicalLayouts().get("void*"))
-            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, C_CHAR));
-    public static final ValueLayout.OfLong C_LONG = (ValueLayout.OfLong) Linker.nativeLinker().canonicalLayouts().get("long");
     private static final int __bool_true_false_are_defined = (int)1L;
     /**
      * {@snippet lang=c :
@@ -248,6 +209,15 @@ public class libremidi_c_h {
      */
     public static int __has_ptrcheck() {
         return __has_ptrcheck;
+    }
+    private static final int __has_bounds_safety_attributes = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * #define __has_bounds_safety_attributes 0
+     * }
+     */
+    public static int __has_bounds_safety_attributes() {
+        return __has_bounds_safety_attributes;
     }
     private static final int USE_CLANG_TYPES = (int)0L;
     /**
@@ -1199,6 +1169,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_get_version");
             }
             return (MemorySegment)mh$.invokeExact();
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1257,6 +1229,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi1_available_apis", ctx, x1);
             }
             mh$.invokeExact(ctx, x1);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1315,6 +1289,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi2_available_apis", ctx, x1);
             }
             mh$.invokeExact(ctx, x1);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1373,6 +1349,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_api_identifier", x0);
             }
             return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1431,6 +1409,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_api_display_name", x0);
             }
             return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1489,6 +1469,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_get_compiled_api_by_identifier", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1547,6 +1529,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_api_configuration_init", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1605,6 +1589,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_observer_configuration_init", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1663,6 +1649,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_configuration_init", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1722,6 +1710,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_port_clone", port, dst);
             }
             return (int)mh$.invokeExact(port, dst);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1780,6 +1770,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_port_free", port);
             }
             return (int)mh$.invokeExact(port);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1840,6 +1832,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_port_name", port, name, len);
             }
             return (int)mh$.invokeExact(port, name, len);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1899,6 +1893,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_port_clone", port, dst);
             }
             return (int)mh$.invokeExact(port, dst);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1957,6 +1953,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_port_free", port);
             }
             return (int)mh$.invokeExact(port);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2017,6 +2015,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_port_name", port, name, len);
             }
             return (int)mh$.invokeExact(port, name, len);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2077,6 +2077,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_observer_new", x0, x1, x2);
             }
             return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2137,6 +2139,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_observer_enumerate_input_ports", x0, context, x2);
             }
             return (int)mh$.invokeExact(x0, context, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2197,6 +2201,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_observer_enumerate_output_ports", x0, context, x2);
             }
             return (int)mh$.invokeExact(x0, context, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2255,6 +2261,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_observer_free", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2315,6 +2323,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_new", x0, x1, x2);
             }
             return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2373,6 +2383,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_is_connected", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2431,6 +2443,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_absolute_timestamp", x0);
             }
             return (long)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2489,6 +2503,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_in_free", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2549,6 +2565,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_new", x0, x1, x2);
             }
             return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2607,6 +2625,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_is_connected", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2667,6 +2687,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_send_message", x0, x1, x2);
             }
             return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2727,6 +2749,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_send_ump", x0, x1, x2);
             }
             return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2788,6 +2812,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_schedule_message", x0, ts, x2, x3);
             }
             return (int)mh$.invokeExact(x0, ts, x2, x3);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2849,6 +2875,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_schedule_ump", x0, ts, x2, x3);
             }
             return (int)mh$.invokeExact(x0, ts, x2, x3);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -2907,6 +2935,8 @@ public class libremidi_c_h {
                 traceDowncall("libremidi_midi_out_free", x0);
             }
             return (int)mh$.invokeExact(x0);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }

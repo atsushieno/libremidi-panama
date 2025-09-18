@@ -17,9 +17,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * void (*)(void *, const libremidi_midi_in_port *)
  * }
  */
-public class libremidi_midi_observer_enumerate_input_ports$x0 {
+public final class libremidi_midi_observer_enumerate_input_ports$x0 {
 
-    libremidi_midi_observer_enumerate_input_ports$x0() {
+    private libremidi_midi_observer_enumerate_input_ports$x0() {
         // Should not be called directly
     }
 
@@ -57,9 +57,11 @@ public class libremidi_midi_observer_enumerate_input_ports$x0 {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static void invoke(MemorySegment funcPtr,MemorySegment _x0, MemorySegment _x1) {
+    public static void invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1) {
         try {
              DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

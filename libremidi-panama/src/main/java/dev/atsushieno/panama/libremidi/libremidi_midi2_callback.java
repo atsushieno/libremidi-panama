@@ -87,9 +87,9 @@ public class libremidi_midi2_callback {
      * void (*callback)(void *, libremidi_timestamp, const libremidi_midi2_symbol *, size_t)
      * }
      */
-    public static class callback {
+    public final static class callback {
 
-        callback() {
+        private callback() {
             // Should not be called directly
         }
 
@@ -129,9 +129,11 @@ public class libremidi_midi2_callback {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static void invoke(MemorySegment funcPtr,MemorySegment _x0, long _x1, MemorySegment _x2, long _x3) {
+        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1, MemorySegment _x2, long _x3) {
             try {
                  DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

@@ -8,3 +8,7 @@ build/
 .kotlin
 .idea
 
+libremidi-panama/src/main/resources/jne/
+libremidi-panama/src/main/java/dev/atsushieno/panama/libremidi/__darwin_*
+libremidi-panama/src/main/java/dev/atsushieno/panama/libremidi/__mbstate_t*
+libremidi-panama/src/main/java/dev/atsushieno/panama/libremidi/_opaque_pthread_*

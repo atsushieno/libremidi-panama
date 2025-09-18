@@ -1,22 +1,20 @@
 
 plugins {
     id ("application")
-    alias(libs.plugins.kotlin.jvm)
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInt())
     }
 }
 application {
-    mainClass = "DriverKt"
+    mainClass = "Driver"
 }
 
 dependencies {
     implementation(project(":libremidi-panama"))
     implementation(libs.jne)
-    implementation(libs.kotlin.stdlib)
 }
 repositories {
     mavenCentral()

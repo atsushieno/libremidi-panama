@@ -1,7 +1,7 @@
 
 plugins {
     id ("application")
-    id 'org.jetbrains.kotlin.jvm'
+    alias(libs.plugins.kotlin.jvm)
 }
 
 java {
@@ -15,8 +15,8 @@ application {
 
 dependencies {
     implementation(project(":libremidi-panama"))
-    implementation 'com.fizzed:jne:4.3.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation(libs.jne)
+    implementation(libs.kotlin.stdlib)
 }
 repositories {
     mavenCentral()

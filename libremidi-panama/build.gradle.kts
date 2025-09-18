@@ -1,7 +1,7 @@
 plugins {
     id ("java-library")
-    //id "io.github.krakowski.jextract" version "0.5.0"
-    id ("com.vanniktech.maven.publish") version "0.31.0"
+    //alias(libs.plugins.jextract)
+    alias(libs.plugins.maven.publish)
     id ("maven-publish")
     id ("signing")
 }
@@ -41,9 +41,9 @@ jextract {
 */
 
 dependencies {
-    implementation("com.fizzed:jne:4.3.0")
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(libs.jne)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
 }
 
 tasks.jar {

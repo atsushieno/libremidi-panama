@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.jextract) apply false
-    alias(libs.plugins.maven.publish) apply false
+    alias(libs.plugins.vanniktech.maven.publish) apply false
 }
 
 allprojects {

@@ -1,7 +1,7 @@
 plugins {
     id ("java-library")
     //alias(libs.plugins.jextract)
-    alias(libs.plugins.maven.publish)
+    alias(libs.plugins.vanniktech.maven.publish)
     id ("maven-publish")
     id ("signing")
 }

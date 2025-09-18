@@ -2,8 +2,8 @@
 junit = "5.9.1"
 jne = "4.3.0"
 jextract = "0.5.0"
-mavenPublish = "0.31.0"
 java = "22"
+vanniktech-maven-publish = "0.31.0"
 
 [libraries]
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
@@ -12,4 +12,4 @@ jne = { group = "com.fizzed", name = "jne", version.ref = "jne" }
 
 [plugins]
 jextract = { id = "io.github.krakowski.jextract", version.ref = "jextract" }
-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-maven-publish" }
